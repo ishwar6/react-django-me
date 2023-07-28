@@ -9,17 +9,75 @@ from .models import (Navbar, HomeSection, AboutSection, EducationSection, Experi
 
 
 class ContactMeSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the ContactMe model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        contact_me_data = {
+            'name': 'John Doe',
+            'email': 'john.doe@example.com',
+            'subject': 'Inquiry',
+            'message': 'Hello, I have a question...',
+        }
+        serializer = ContactMeSerializer(data=contact_me_data)
+        if serializer.is_valid():
+            contact_me_instance = serializer.save()
+    """
     class Meta:
         model = ContactMe
         fields = '__all__'
 
 
 class BlogCommentsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the BlogComments model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        comment_data = {
+            'author': 'John Doe',
+            'comment': 'Great blog post!',
+            'blog': 1,  # Assuming 1 is the ID of the related blog
+        }
+        serializer = BlogCommentsSerializer(data=comment_data)
+        if serializer.is_valid():
+            comment_instance = serializer.save()
+    """
     class Meta:
         model = BlogComments
         fields = '__all__'
 
 class NavbarSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Navbar model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        navbar_data = {
+            'home': True,
+            'about': True,
+            'education': True,
+            'experience': False,
+            'services': False,
+            'skills': True,
+            'projects': False,
+            'my_blog': True,
+            'contact': True,
+            'youtube': False,
+            'social_media': True,
+            'hire_me': True,
+        }
+        serializer = NavbarSerializer(data=navbar_data)
+        if serializer.is_valid():
+            navbar_instance = serializer.save()
+    """
     class Meta:
         model = Navbar
         fields = ["home", "about", "education", "experience", "services", "skills", "projects", "my_blog", "contact", "youtube", 
@@ -27,24 +85,94 @@ class NavbarSerializer(serializers.ModelSerializer):
 
 
 class HomeSectionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the HomeSection model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        home_section_data = {
+            'title': 'Welcome to My Website',
+            'description': 'This is my home page...',
+            'image': 'path/to/image.jpg',
+            'created_at': '2023-07-28',
+        }
+        serializer = HomeSectionSerializer(data=home_section_data)
+        if serializer.is_valid():
+            home_section_instance = serializer.save()
+    """
     class Meta:
         model = HomeSection
         fields = '__all__'
 
 
 class AboutSectionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the AboutSection model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        about_section_data = {
+            'title': 'About Me',
+            'description': 'I am a software developer...',
+            'image': 'path/to/image.jpg',
+            'created_at': '2023-07-28',
+        }
+        serializer = AboutSectionSerializer(data=about_section_data)
+        if serializer.is_valid():
+            about_section_instance = serializer.save()
+    """
     class Meta:
         model = AboutSection
         fields = '__all__'
 
 
 class EducationSectionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the EducationSection model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        education_section_data = {
+            'institution': 'University of XYZ',
+            'degree': 'Bachelor of Science',
+            'major': 'Computer Science',
+            'start_date': '2019-09-01',
+            'end_date': '2023-06-30',
+        }
+        serializer = EducationSectionSerializer(data=education_section_data)
+        if serializer.is_valid():
+            education_section_instance = serializer.save()
+    """
     class Meta:
         model = EducationSection
         fields = '__all__'
 
 
 class ExperienceSectionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the ExperienceSection model.
+
+    Attributes:
+        None
+
+    Example Usage:
+        experience_section_data = {
+            'position': 'Software Engineer',
+            'company': 'ABC Tech Solutions',
+            'description': 'Worked on various projects...',
+            'start_date': '2020-01-01',
+            'end_date': '2022-12-31',
+        }
+        serializer = ExperienceSectionSerializer(data=experience_section_data)
+        if serializer.is_valid():
+            experience_section_instance = serializer.save()
+    """
     class Meta:
         model = ExperienceSection
         fields = '__all__'
