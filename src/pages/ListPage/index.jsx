@@ -50,7 +50,7 @@ function ListPage() {
                           style={{
                             backgroundImage: listItem?.file
                               ? `url(${BASEURL + listItem?.file})`
-                              : "url(/src/images/image_1.jpg)",
+                              : "url(/images/image_1.jpg)",
                           }}
                         ></a>
                         <div className="text mt-3 ml-5 float-right d-block">

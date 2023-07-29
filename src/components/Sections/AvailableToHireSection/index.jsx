@@ -10,7 +10,7 @@ function AvailableToHireSection({ hireMeData }) {
       style={{
         backgroundImage: hireMeData?.file
           ? `url(${BASEURL + hireMeData?.file})`
-          : "url(/src/images/bg_1.jpg)",
+          : "url(/images/bg_1.jpg)",
       }}
     >
       <div className="container">

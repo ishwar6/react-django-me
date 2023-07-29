@@ -41,7 +41,7 @@ function BlogsSection({ blogsData }) {
                           style={{
                             backgroundImage: blog?.file
                               ? `url(${BASEURL + blog?.file})`
-                              : "url(/src/images/image_1.jpg)",
+                              : "url(/images/image_1.jpg)",
                           }}
                         ></a>
                         <div className="text mt-3 float-right d-block">

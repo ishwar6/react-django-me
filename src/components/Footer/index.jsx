@@ -3,7 +3,7 @@ function Footer({ sections, aboutData, socialLinks }) {
     <div className="ftco-footer ftco_section">
       <div className="container">
         <div className="row mb-5 justify-content-around">
-          <div className="col-md-3">
+          <div className="col-md-4">
             <div className="ftco-footer-widget mb-4">
               {aboutData?.description !== "" && (
                 <>
@@ -61,7 +61,7 @@ function Footer({ sections, aboutData, socialLinks }) {
             </div>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-md-4">
             <div className="ftco-footer-widget mb-4">
               <h2 className="ftco-heading-2">Have a Questions?</h2>
               <div className="block-23 mb-3">

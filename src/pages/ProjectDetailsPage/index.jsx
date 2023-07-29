@@ -27,7 +27,7 @@ function ProjectDetailsPage() {
           <div
             className="hero-wrap"
             style={{
-              backgroundImage: "url('/src/images/bg_1.jpg')",
+              backgroundImage: "url('/images/bg_1.jpg')",
               height: "600px",
               display: "flex",
               alignItems: "center",

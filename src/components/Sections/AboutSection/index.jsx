@@ -1,21 +1,22 @@
 import moment from "moment/moment";
+import { BASEURL } from "../../../Utils/Api/axiosClient";
 
 function AboutSection({ aboutData }) {
   return (
     <div className="ftco-about img ftco_section ftco-no-pb" id="about_section">
       <div className="container">
         <div className="row d-flex">
-          <div className="col-md-6 col-lg-5 d-flex">
+          {aboutData?.file && <div className="col-md-6 col-lg-5 d-flex">
             <div className="img-about img d-flex align-items-stretch">
               <div className="overlay"></div>
               <div
                 className="img d-flex align-self-stretch align-items-center"
                 style={{
-                  backgroundImage: "url(/src/images/bg_1.png)",
+                  backgroundImage: `url(${BASEURL + aboutData?.file})`,
                 }}
               ></div>
             </div>
-          </div>
+          </div>}
           <div className="col-md-6 col-lg-7 pl-lg-5 pb-5">
             <div className="row justify-content-start pb-3">
               <div className="col-md-12 heading_section">
@@ -64,15 +65,15 @@ function AboutSection({ aboutData }) {
                 </ul>
               </div>
             </div>
-            <div className="counter-wrap d-flex mt-md-3">
+            {aboutData?.resume && <div className="counter-wrap d-flex mt-md-3">
               <div className="text">
                 <p>
-                  <a href="#" className="btn btn-primary py-3 px-3">
+                  <a download href={BASEURL + aboutData?.resume} className="btn btn-primary py-3 px-3">
                     Download CV
                   </a>
                 </p>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
