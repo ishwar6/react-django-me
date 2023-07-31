@@ -47,7 +47,7 @@ class BlogsGetView(APIView):
                 blog_instance = MyBlogSection.objects.get(id=my_blog)
                 serializer = SingleBlogSectionSerializer(blog_instance)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            except Projects.DoesNotExist:
+            except MyBlogSection.DoesNotExist:
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
         if recent:
@@ -56,7 +56,7 @@ class BlogsGetView(APIView):
                 blogs = MyBlogSection.objects.all().order_by('created_at')[:3]
                 serializer = MyBlogSectionSerializer(blogs, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            except Projects.DoesNotExist:
+            except MyBlogSection.DoesNotExist:
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
         # If my_blog is not provided, return all projects
@@ -106,9 +106,9 @@ class BlogCommentsCreateView(APIView):
             # If my_blog is provided in the query string, filter the queryset
             try:
                 blog_comments = BlogComments.objects.filter(my_blog=my_blog)
-                serializer = ProjectsSerializer(blog_comments)
+                serializer = BlogCommentsSerializer(blog_comments, many = True) 
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            except Projects.DoesNotExist:
+            except BlogComments.DoesNotExist:
                 return Response({"error": "blog not found."}, status=status.HTTP_404_NOT_FOUND)
             
         return Response({"Error":"Blog id is missing"}, status=status.HTTP_400_BAD_REQUEST)
