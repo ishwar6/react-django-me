@@ -213,10 +213,11 @@ class HomeSection(BaseModelMixin):
 
         
         sub_string = self.sub_text
-        sub_words_between_quotes = re.findall(r'"([^"]+)"', sub_string)  # Replace this with the dynamic word you want to surround
-        for sub_dynamic_word in sub_words_between_quotes:
-            if sub_dynamic_word and sub_dynamic_word in self.sub_text:
-                self.sub_text = self.sub_text.replace(sub_dynamic_word, f'<span>{sub_dynamic_word}</span>').replace('"', "")
+        if self.sub_text:
+            sub_words_between_quotes = re.findall(r'"([^"]+)"', sub_string)  # Replace this with the dynamic word you want to surround
+            for sub_dynamic_word in sub_words_between_quotes:
+                if sub_dynamic_word and sub_dynamic_word in self.sub_text:
+                    self.sub_text = self.sub_text.replace(sub_dynamic_word, f'<span>{sub_dynamic_word}</span>').replace('"', "")
 
         super(HomeSection, self).save(*args, **kwargs)
 
