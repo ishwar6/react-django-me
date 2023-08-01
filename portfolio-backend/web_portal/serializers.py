@@ -119,7 +119,6 @@ class AboutSectionSerializer(serializers.ModelSerializer):
             'title': 'About Me',
             'description': 'I am a software developer...',
             'image': 'path/to/image.jpg',
-            'created_at': '2023-07-28',
         }
         serializer = AboutSectionSerializer(data=about_section_data)
         if serializer.is_valid():
@@ -142,8 +141,7 @@ class EducationSectionSerializer(serializers.ModelSerializer):
             'institution': 'University of XYZ',
             'degree': 'Bachelor of Science',
             'major': 'Computer Science',
-            'start_date': '2019-09-01',
-            'end_date': '2023-06-30',
+            'duration': '2019-20',
         }
         serializer = EducationSectionSerializer(data=education_section_data)
         if serializer.is_valid():
@@ -166,8 +164,7 @@ class ExperienceSectionSerializer(serializers.ModelSerializer):
             'position': 'Software Engineer',
             'company': 'ABC Tech Solutions',
             'description': 'Worked on various projects...',
-            'start_date': '2020-01-01',
-            'end_date': '2022-12-31',
+            'duration': '2019-20',
         }
         serializer = ExperienceSectionSerializer(data=experience_section_data)
         if serializer.is_valid():
@@ -462,7 +459,6 @@ class YouTubeSerializer(serializers.ModelSerializer):
         # Retrieve the related youtube_links queryset
         youtube_links_queryset = youtube_instance.youtube_links
 
-        # Apply the filter to the queryset (e.g., filter is_main=True or is_main=False)
         filtered_links = youtube_links_queryset.filter(
             Q(is_main=True) | Q(is_main=False)
         ).order_by('-is_main', '-created_at')[:3]
@@ -735,7 +731,7 @@ class SingleBlogSectionSerializer(serializers.ModelSerializer):
     about = serializers.SerializerMethodField()
     tags = serializers.SlugRelatedField(
         many=True,
-        slug_field='name',  # Replace 'name' with the field that represents the tag name in the Tag model
+        slug_field='name', 
         read_only=True
     )
     all_tags = serializers.SerializerMethodField()

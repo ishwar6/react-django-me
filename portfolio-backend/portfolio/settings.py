@@ -26,8 +26,19 @@ SECRET_KEY = 'django-insecure-7ir!74++fu#n(84_48shvz#r5ad4o4uw_mxobd6spi(0xg+b@=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['157.245.96.5', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = ['http://157.245.96.5', 'http://127.0.0.1', 'http://localhost','http://localhost:5173','portfolio.softcoders.me']
+
+CORS_ALLOWED_ORIGINS = [
+    'http://157.245.96.5',
+    "http://localhost",
+    "http://127.0.0.1",
+    'http://127.0.0.1:5500',
+    'http://localhost:5173',
+    'http://portfolio.softcoders.me',
+    'http://157.245.96.5:5173'
+]
 
 # Application definition
 
@@ -41,16 +52,19 @@ INSTALLED_APPS = [
     'web_portal',
     'rest_framework',
     'taggit',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'portfolio.urls'
@@ -109,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

@@ -33,9 +33,9 @@ class BlogsGetView(APIView):
             - If neither 'my_blog' nor 'recent' is provided, return all blogs serialized data.
 
         Example:
-            GET /api/blogs/?my_blog=1
-            GET /api/blogs/?recent=True
-            GET /api/blogs/
+            GET /blogs/?my_blog=1
+            GET /blogs/?recent=True
+            GET /blogs/
     """
     def get(self, request):
         my_blog = request.GET.get("my_blog")
@@ -51,16 +51,16 @@ class BlogsGetView(APIView):
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
         if recent:
-            # If my_blog is provided in the query string, filter the queryset
+            # If recent is provided in the query string, filter the queryset
             try:
-                blogs = MyBlogSection.objects.all().order_by('created_at')[:3]
+                blogs = MyBlogSection.objects.all().order_by('-created_at')[:3]
                 serializer = MyBlogSectionSerializer(blogs, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except MyBlogSection.DoesNotExist:
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
-        # If my_blog is not provided, return all projects
-        queryset = MyBlogSection.objects.all()
+        # If my_blog and recent is not provided, return all blogs
+        queryset = MyBlogSection.objects.all().order_by('-created_at')
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = MyBlogSectionSerializer(result_page, many=True)
@@ -90,8 +90,8 @@ class BlogCommentsCreateView(APIView):
             field for the corresponding MyBlogSection upon successful comment creation.
 
         Example:
-            GET /api/blog-comments/?my_blog=1
-            POST /api/blog-comments/
+            GET /blog-comments/?my_blog=1
+            POST /blog-comments/
             {
                 "my_blog": 1,
                 "name": "John Doe",
@@ -141,12 +141,11 @@ class PortfolioView(APIView):
             - Fetch and return the serialized representation of the portfolio data.
 
         Example:
-            GET /api/portfolio/
+            GET /
     """
     def get(self, request):
-        # You may use a different approach to fetch the appropriate object.
-        navbar_instance = get_object_or_404(Navbar)
-        # Serialize the portfolio_data using the PortfolioSerializer
+        navbar_instance = Navbar.objects.first()
+        # Serialize the portfolio data using the PortfolioSerializer
         serializer = PortfolioSerializer(navbar_instance)
         return Response(serializer.data)
     
@@ -162,7 +161,7 @@ class ContactMeCreateView(APIView):
             email address.
 
         Example:
-            POST /api/contact-me/
+            POST /contact-me/
             {
                 "name": "John Doe",
                 "email": "john.doe@example.com",
@@ -209,9 +208,9 @@ class ProjectsGetView(APIView):
             - If neither 'project_id' nor 'recent' is provided, return all projects serialized data.
 
         Example:
-            GET /api/projects/?project_id=1
-            GET /api/projects/?recent=True
-            GET /api/projects/
+            GET /projects/?project_id=1
+            GET /projects/?recent=True
+            GET /projects/
     """
     def get(self, request):
         project_id = request.GET.get("project_id")
@@ -227,16 +226,16 @@ class ProjectsGetView(APIView):
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
         if recent:
-            # If project_id is provided in the query string, filter the queryset
+            # If recent is provided in the query string, filter the queryset
             try:
-                project_instance = Projects.objects.all().order_by('created_at')[:3]
+                project_instance = Projects.objects.all().order_by('-created_at')[:3]
                 serializer = ProjectsSerializer(project_instance, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except Projects.DoesNotExist:
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
-        # If project_id is not provided, return all projects
-        queryset = Projects.objects.all()
+        # If project_id and recent is not provided, return all projects
+        queryset = Projects.objects.all().order_by('-created_at')
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = MyBlogSectionSerializer(result_page, many=True)

@@ -84,7 +84,7 @@ class ServiceSectionsInline(admin.TabularInline):
 class ServiceAdmin(admin.ModelAdmin):
     inlines = [ServiceSectionsInline]
     list_display = ('id', "description",)
-    form = ServiceSectionsForm  # Use the custom form for ServiceSections model
+    form = ServiceSectionsForm 
 
 
 admin.site.register(Services, ServiceAdmin)
@@ -207,7 +207,6 @@ class MyBlogSectionForm(forms.ModelForm):
         return file
 
 
-# Define MyBlogSectionAdmin with the custom form for MyBlogSubheading model
 class MyBlogSubheadingInline(admin.TabularInline):
     model = MyBlogSubheading
     form = MyBlogSubheadingForm
@@ -251,20 +250,18 @@ class ProjectsForm(forms.ModelForm):
 class ProjectSubheadingInline(admin.TabularInline):
     model = ProjectSubheading
     extra = 1
-    form = ProjectSubheadingForm  # Use the custom form for ProjectSubheading model
+    form = ProjectSubheadingForm 
 
 class ProjectsAdmin(admin.ModelAdmin):
     inlines = [ProjectSubheadingInline]
-    form = ProjectsForm  # Use the custom form for Projects model
+    form = ProjectsForm 
     list_display = ('id', "name", "service", "description", "is_main", "file",)
     def clean(self, form):
         cleaned_data = super().clean()
 
-        # Perform custom validation here
         name = cleaned_data.get('name')
         service = cleaned_data.get('service')
 
-        # Custom validation example: Ensuring name and service are not the same
         if name and service and name.lower() == service.lower():
             raise forms.ValidationError("Name and Service cannot be the same.")
 
@@ -274,7 +271,6 @@ admin.site.register(Projects, ProjectsAdmin)
 
 
 
-# Custom form for SocialMediaLinks model
 class SocialMediaLinksForm(forms.ModelForm):
     class Meta:
         model = SocialMediaLinks
@@ -314,12 +310,10 @@ class SocialMediaLinksForm(forms.ModelForm):
     def clean_facebook(self):
         return self.validate_social_media_link(self.cleaned_data.get('facebook'), 'facebook')
 
-# Use the custom form in the admin
 class SocialMediaLinksAdmin(admin.ModelAdmin):
     form = SocialMediaLinksForm
     list_display = ('id', "instagram", "twitter", "youtube", "linkedin", "github", "facebook",)
 
-# Register the model with the custom admin
 admin.site.register(SocialMediaLinks, SocialMediaLinksAdmin)
 
 

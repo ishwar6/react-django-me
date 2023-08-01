@@ -60,20 +60,6 @@ class SingleObjectManager(models.Manager):
             ValueError: If an object already exists in the model.
     """
     def create(self, **kwargs):
-        """
-            Create a new object if no object already exists,
-            otherwise raise a ValueError indicating that only
-            one object is allowed.
-
-            Args:
-                **kwargs: The fields and their values for creating the object.
-
-            Returns:
-                Model: The newly created object.
-
-            Raises:
-                ValueError: If an object already exists in the model.
-        """
         if self.exists():
             raise ValueError("Only one object is allowed.")
         return super(SingleObjectManager, self).create(**kwargs)
@@ -125,6 +111,7 @@ class Navbar(BaseModelMixin):
                 receive_mail=True,
                 youtube_link=True,
                 social_media=True,
+                hire_me=True,
             )
     """
     nav_name = models.CharField(max_length=50, null=False, blank=False)
@@ -206,7 +193,7 @@ class HomeSection(BaseModelMixin):
         """
         # Process the main_text to surround dynamic word with <span> tags
         string = self.main_text
-        words_between_quotes = re.findall(r'"([^"]+)"', string)  # Replace this with the dynamic word you want to surround
+        words_between_quotes = re.findall(r'"([^"]+)"', string)
         for dynamic_word in words_between_quotes:
             if dynamic_word and dynamic_word in self.main_text:
                 self.main_text = self.main_text.replace(dynamic_word, f'<span>{dynamic_word}</span>').replace('"', "")
@@ -214,7 +201,7 @@ class HomeSection(BaseModelMixin):
         
         sub_string = self.sub_text
         if self.sub_text:
-            sub_words_between_quotes = re.findall(r'"([^"]+)"', sub_string)  # Replace this with the dynamic word you want to surround
+            sub_words_between_quotes = re.findall(r'"([^"]+)"', sub_string) 
             for sub_dynamic_word in sub_words_between_quotes:
                 if sub_dynamic_word and sub_dynamic_word in self.sub_text:
                     self.sub_text = self.sub_text.replace(sub_dynamic_word, f'<span>{sub_dynamic_word}</span>').replace('"', "")
@@ -298,8 +285,10 @@ class AboutSection(BaseModelMixin):
     phone = models.CharField(max_length=20, null=False, blank=False, validators=[phone_regex])
     website = models.CharField(max_length=20, null=True, blank=True)
     def validate_file_extension(value):
-        ext = os.path.splitext(value.name)[1]  # Get the file extension from the file name
-        valid_extensions = ['.pdf', '.doc', '.docx']  # List of valid extensions (add any other desired extensions)
+        # Get the file extension from the file name
+        ext = os.path.splitext(value.name)[1]  
+        # List of valid extensions 
+        valid_extensions = ['.pdf', '.doc', '.docx']  
 
         if not ext.lower() in valid_extensions:
             raise ValidationError('Only PDF and DOC files are allowed.')
@@ -825,7 +814,7 @@ class BlogComments(BaseModelMixin):
                 name="John Doe",
                 message="Great article! I found it very insightful.",
                 email="john.doe@example.com",
-                my_blog=my_blog_instance,  # Replace my_blog_instance with the actual MyBlogSection instance.
+                my_blog=1,  
             )
 
         Notes:
@@ -1006,7 +995,7 @@ class HireMeSection(BaseModelMixin):
         """
         # Process the main_text to surround dynamic word with <span> tags
         string = self.main_text
-        words_between_quotes = re.findall(r'"([^"]+)"', string)  # Replace this with the dynamic word you want to surround
+        words_between_quotes = re.findall(r'"([^"]+)"', string) 
         for dynamic_word in words_between_quotes:
             if dynamic_word and dynamic_word in self.main_text:
                 self.main_text = self.main_text.replace(dynamic_word, f'<span>{dynamic_word}</span>').replace('"', "")
