@@ -31,12 +31,13 @@ SECRET_KEY = 'django-insecure-7ir!74++fu#n(84_48shvz#r5ad4o4uw_mxobd6spi(0xg+b@=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['157.245.96.5', 'localhost']
+ALLOWED_HOSTS = ['157.245.96.5', 'localhost','13.235.95.26']
 
-CSRF_TRUSTED_ORIGINS = ['http://157.245.96.5', 'http://127.0.0.1', 'http://localhost','http://localhost:5173','http://portfolio.softcoders.me']
+CSRF_TRUSTED_ORIGINS = ['http://157.245.96.5', 'http://127.0.0.1', 'http://localhost','http://localhost:5173','http://portfolio.softcoders.me','http://13.235.95.26']
 
 CORS_ALLOWED_ORIGINS = [
     'http://157.245.96.5',
+    "http://13.235.95.26",
     "http://localhost",
     "http://127.0.0.1",
     'http://127.0.0.1:5500',
