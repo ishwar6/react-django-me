@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 export const getHomePageData = (setHomeData, dispatch) => {
   try {
     axiosClient
-      .get("/")
+      .get("/home")
       .then((res) => {
         dispatch(setHomePageData(res.data));
         setHomeData(res.data);
