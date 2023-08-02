@@ -178,7 +178,7 @@ class HomeSection(BaseModelMixin):
     sub_text = models.CharField(max_length=255, blank=True, null=True,
         help_text='To design the specific words please use "double quote".')
     file = models.FileField(upload_to=unique_home_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 3:2 aspect ratio, and only JPG and JPEG files are allowed.")
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)
 
@@ -295,7 +295,7 @@ class AboutSection(BaseModelMixin):
     resume = models.FileField(upload_to='resumes/', validators=[validate_file_extension],
         help_text="Only PDF and DOC files are allowed.",)
     file = models.FileField(upload_to='about/', blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 4:5 aspect ratio, and only JPG and JPEG files are allowed.")
 
     objects = SingleObjectManager()
 
@@ -451,7 +451,7 @@ class ServiceSections(BaseModelMixin):
     """
     service = models.CharField(max_length=100, null=False, blank=False)
     file = models.FileField(upload_to=unique_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
     service_section = models.ForeignKey(Services, related_name="service_sections",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -538,6 +538,27 @@ def unique_project_filename(instance, filename):
     return os.path.join('project/', unique_name)
 
 
+
+def replace_custom_symbols_with_elements(text):
+
+    # For bold
+    text = re.sub(r'#b#(.*?)#b#', r'<strong>\1</strong>', text)
+
+    # For link
+    text = re.sub(r'#a#(.*?)#a#', r'<a href="\1">\1</a>', text)
+
+    # For italic text
+    text = re.sub(r'#i#(.*?)#i#', r'<em>\1</em>', text)
+
+    # For code commands
+    text = re.sub(r'#pre#(.*?)#pre#', r'<pre><code>\1</code></pre>', text)
+
+    # For gist
+    text = re.sub(r'#Gist#(.*?)#Gist#', r'<Gist class="gist" \1 />', text)
+
+    return text
+
+
 class Projects(BaseModelMixin):
     """
         Model representing the projects configuration.
@@ -572,11 +593,29 @@ class Projects(BaseModelMixin):
     """
     name = models.CharField(max_length=255, null=False, blank=False, help_text="Maximum length is 255 characters.")
     service = models.CharField(max_length=100, null=False, blank=False)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True,
+                                   help_text="""
+                            Use custom symbols to format the text:\n
+                                 - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
+                                 - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
+                                 - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
+                                 - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+                         To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
+                         and then close it with another #Gist# custom symbol. For example:
+                         #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+
+                         Note: 'file' is optional when including a Gist.""")
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
     
+    def save(self, *args, **kwargs):
+        string = self.description
+        
+        self.description = replace_custom_symbols_with_elements(string)
+
+        super(Projects, self).save(*args, **kwargs)
     
     def __str__(self):
         return self.name
@@ -611,11 +650,31 @@ class ProjectSubheading(BaseModelMixin):
             )
     """
     tittle = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True,
+                                   help_text="""
+                            Use custom symbols to format the text:\n
+                                 - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
+                                 - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
+                                 - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
+                                 - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+                         To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
+                         and then close it with another #Gist# custom symbol. For example:
+                         #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+
+                         Note: 'file' is optional when including a Gist.""")
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 4:3 aspect ratio, and only JPG and JPEG files are allowed.")
     project = models.ForeignKey(Projects, related_name="projects_subheadings",
         on_delete=models.CASCADE, null=True, blank=True)
+    
+
+    def save(self, *args, **kwargs):
+        string = self.description
+        
+        self.description = replace_custom_symbols_with_elements(string)
+
+        super(ProjectSubheading, self).save(*args, **kwargs)
     
 
 
@@ -740,13 +799,44 @@ class MyBlogSection(BaseModelMixin):
     """
     name = models.CharField(max_length=255, null=False, blank=False, help_text="Maximum length is 255 characters.")
     service = models.CharField(max_length=100, null=False, blank=False, help_text="Maximum length is 100 characters.")
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True,
+                                   help_text="""
+                            Use custom symbols to format the text:\n
+                                 - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
+                                 - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
+                                 - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
+                                 - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+                         To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
+                         and then close it with another #Gist# custom symbol. For example:
+                         #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+
+                         Note: 'file' is optional when including a Gist.""")
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
     comment_count = models.BigIntegerField(default= 0)
 
     tags = TaggableManager()
+    
+    def update_blog_comment_count():
+        blogs = MyBlogSection.objects.all()
+
+        for blog in blogs:
+            # Count the number of comments associated with the blog
+            comment_count = BlogComments.objects.filter(my_blog=blog).count()
+
+            # Update the comment_count for the blog
+            blog.comment_count = comment_count
+            blog.save()
+        
+
+    def save(self, *args, **kwargs):
+        string = self.description
+        
+        self.description = replace_custom_symbols_with_elements(string)
+
+        super(MyBlogSection, self).save(*args, **kwargs)
     
     def __str__(self):
         return self.name
@@ -782,11 +872,31 @@ class MyBlogSubheading(BaseModelMixin):
             )
     """
     tittle = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True,
+                                   help_text="""
+                            Use custom symbols to format the text:\n
+                                 - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
+                                 - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
+                                 - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
+                                 - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+                         To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
+                         and then close it with another #Gist# custom symbol. For example:
+                         #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
+
+                         Note: 'file' is optional when including a Gist.""")
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 4:3 aspect ratio, and only JPG and JPEG files are allowed.")
     my_blog = models.ForeignKey(MyBlogSection, related_name="MyBlog_subheadings",
         on_delete=models.CASCADE, null=True, blank=True)
+    
+
+    def save(self, *args, **kwargs):
+        string = self.description
+        
+        self.description = replace_custom_symbols_with_elements(string)
+
+        super(MyBlogSubheading, self).save(*args, **kwargs)
 
 
 
@@ -979,7 +1089,7 @@ class HireMeSection(BaseModelMixin):
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Only JPG and JPEG files are allowed.")
+                            help_text="Please upload an image with a 16:9 aspect ratio, and only JPG and JPEG files are allowed.")
 
     
     objects = SingleObjectManager()

@@ -9,13 +9,7 @@ from .serializers import (PortfolioSerializer, BlogCommentsSerializer,MyBlogSect
 from .utils import send_email
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
-
-class CustomPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 100
-
+from .pagination import CommentPagination, CustomPagination
 
 class BlogsGetView(APIView):
     """
@@ -34,12 +28,15 @@ class BlogsGetView(APIView):
 
         Example:
             GET /blogs/?my_blog=1
+            GET /blogs/?tag=AI
             GET /blogs/?recent=True
             GET /blogs/
     """
     def get(self, request):
         my_blog = request.GET.get("my_blog")
         recent = request.GET.get("recent")
+        tag = request.GET.get("tag")
+        MyBlogSection.update_blog_comment_count()
 
         if my_blog:
             # If my_blog is provided in the query string, filter the queryset
@@ -52,23 +49,49 @@ class BlogsGetView(APIView):
             
         if recent:
             # If recent is provided in the query string, filter the queryset
-            try:
-                blogs = MyBlogSection.objects.all().order_by('-created_at')[:3]
-                serializer = MyBlogSectionSerializer(blogs, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except MyBlogSection.DoesNotExist:
-                return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
+            blogs = MyBlogSection.objects.all().order_by('-created_at')[:3]
+            serializer = MyBlogSectionSerializer(blogs, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        if tag:
+            # If tag is provided in the query string, filter the queryset
+            tag_list = tag.split(',')
+            queryset = MyBlogSection.objects
+            obj_list = set()
+            # Build the filter query for each tag and chain them using AND operator (&)
+            for tag_name in tag_list:
+                queryset_id = queryset.filter(tags__name__iexact=tag_name).values_list('id', flat=True)
+                obj_list.add(queryset_id)
+            obj_list = list(obj_list)
+            queryset = MyBlogSection.objects.filter(id__in = obj_list)
+
+            paginator = CustomPagination()
+            result_page = paginator.paginate_queryset(queryset, request)
+            serializer = MyBlogSectionSerializer(result_page, many=True)
+            all_tags = MyBlogSection.tags.all()
+            all_tags =  list(all_tags.values_list('name', flat=True).distinct())
+            response_data = {
+                "count": paginator.page.paginator.count,
+                "next_link": paginator.get_next_link(),
+                "previous_link": paginator.get_previous_link(),
+                "data": serializer.data,
+                "all_tags":all_tags
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
             
-        # If my_blog and recent is not provided, return all blogs
+        # If my_blog, tag and recent is not provided, return all blogs
         queryset = MyBlogSection.objects.all().order_by('-created_at')
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = MyBlogSectionSerializer(result_page, many=True)
+        all_tags = MyBlogSection.tags.all()
+        all_tags =  list(all_tags.values_list('name', flat=True).distinct())
         response_data = {
             "count": paginator.page.paginator.count,
             "next_link": paginator.get_next_link(),
             "previous_link": paginator.get_previous_link(),
-            "data": serializer.data
+            "data": serializer.data,
+            "all_tags":all_tags
         }
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -105,11 +128,20 @@ class BlogCommentsCreateView(APIView):
         if my_blog:
             # If my_blog is provided in the query string, filter the queryset
             try:
-                blog_comments = BlogComments.objects.filter(my_blog=my_blog)
-                serializer = BlogCommentsSerializer(blog_comments, many = True) 
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except BlogComments.DoesNotExist:
+                blog = MyBlogSection.objects.get(id = my_blog)
+            except MyBlogSection.DoesNotExist:
                 return Response({"error": "blog not found."}, status=status.HTTP_404_NOT_FOUND)
+            queryset = BlogComments.objects.filter(my_blog=my_blog).order_by('-created_at')
+            paginator = CommentPagination()
+            result_page = paginator.paginate_queryset(queryset, request)
+            serializer = BlogCommentsSerializer(result_page, many = True)
+            response_data = {
+                "count": paginator.page.paginator.count,
+                "next_link": paginator.get_next_link(),
+                "previous_link": paginator.get_previous_link(),
+                "data": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
             
         return Response({"Error":"Blog id is missing"}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -129,7 +161,7 @@ class BlogCommentsCreateView(APIView):
                 except MyBlogSection.DoesNotExist:
                     pass
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"Message":"commented successfully!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -182,8 +214,9 @@ class ContactMeCreateView(APIView):
                 mailer = instance.email
                 subject = instance.subject
                 message = instance.message
+                name = instance.name
 
-                send_email(subject=subject, message=message, mailer=mailer)
+                send_email(subject=subject,name= name,message=message, mailer=mailer)
 
                 # Update the is_mail_sent field and save the instance again
                 instance.is_mail_sent = True
@@ -238,7 +271,7 @@ class ProjectsGetView(APIView):
         queryset = Projects.objects.all().order_by('-created_at')
         paginator = CustomPagination()
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = MyBlogSectionSerializer(result_page, many=True)
+        serializer = ProjectsSerializer(result_page, many=True)
         response_data = {
             "count": paginator.page.paginator.count,
             "next_link": paginator.get_next_link(),

@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['157.245.96.5', 'localhost']
 
-CSRF_TRUSTED_ORIGINS = ['http://157.245.96.5', 'http://127.0.0.1', 'http://localhost','http://localhost:5173','portfolio.softcoders.me']
+CSRF_TRUSTED_ORIGINS = ['http://157.245.96.5', 'http://127.0.0.1', 'http://localhost','http://localhost:5173','http://portfolio.softcoders.me']
 
 CORS_ALLOWED_ORIGINS = [
     'http://157.245.96.5',

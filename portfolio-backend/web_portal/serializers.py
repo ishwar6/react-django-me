@@ -378,7 +378,14 @@ class MyBlogSectionSerializer(serializers.ModelSerializer):
         if serializer.is_valid():
             serializer.save()
     """
+    tags = serializers.SlugRelatedField(
+        many=True,
+        slug_field='name', 
+        read_only=True
+    )
     subheadings = ProjectSubheadingSerializer(many=True, read_only=True, source='MyBlog_subheadings')
+    
+    
     class Meta:
         model = MyBlogSection
         fields = '__all__'

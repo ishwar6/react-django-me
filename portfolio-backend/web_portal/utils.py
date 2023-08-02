@@ -4,11 +4,14 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
 
-def send_email(subject, message, mailer):
+def send_email(subject, name, message, mailer):
 
     receiver_email = "techdev@thesoftcoders.com"
     sent_by = "myfreeid13@gmail.com"
-    message = f"""Mail Sent By : {mailer},
+    message = f"""
+Mail Sent By : {mailer}
+Name of person : {name}
+
 {message}"""
     # Create a multipart message object
     msg = MIMEMultipart()
@@ -27,12 +30,10 @@ def send_email(subject, message, mailer):
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         server.starttls()
 
-        # Login to your Gmail account
+        # Login to Gmail account
         server.login("myfreeid13@gmail.com", "mjbywdnnvwdsvdai")
 
         # Send the email
         server.send_message(msg)
 
     print("Email sent successfully!")
-
-
