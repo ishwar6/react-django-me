@@ -23,12 +23,12 @@ from web_portal.views import PortfolioView, BlogCommentsCreateView, BlogsGetView
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', PortfolioView.as_view(), name='home-page'),
-    path('projects/', ProjectsGetView.as_view(), name='projects'),
-    path('contact-me/', ContactMeCreateView.as_view(), name='contact-me'),
-    path('blogs/', BlogsGetView.as_view(), name='my-blogs'),
-    path('blog-comments/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
+    path('api/admin/', admin.site.urls),
+    path('api/home', PortfolioView.as_view(), name='home-page'),
+    path('api/projects/', ProjectsGetView.as_view(), name='projects'),
+    path('api/contact-me/', ContactMeCreateView.as_view(), name='contact-me'),
+    path('api/blogs/', BlogsGetView.as_view(), name='my-blogs'),
+    path('api/blog-comments/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
 ]
 
 
