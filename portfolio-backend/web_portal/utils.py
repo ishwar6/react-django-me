@@ -4,10 +4,18 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
 
+import os
+import sys
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def send_email(subject, name, message, mailer):
 
-    receiver_email = "techdev@thesoftcoders.com"
-    sent_by = "myfreeid13@gmail.com"
+    receiver_email = os.getenv('RECEIVER_MAIL_ID')
+    sent_by = os.getenv('SEND_BY_MAIL_ID')
+    sent_by_password = os.getenv('SEND_BY_MAIL_PASSWORD')
     message = f"""
 Mail Sent By : {mailer}
 Name of person : {name}
@@ -31,7 +39,7 @@ Name of person : {name}
         server.starttls()
 
         # Login to Gmail account
-        server.login("myfreeid13@gmail.com", "mjbywdnnvwdsvdai")
+        server.login(sent_by, sent_by_password)
 
         # Send the email
         server.send_message(msg)
