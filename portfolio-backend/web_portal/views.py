@@ -185,7 +185,7 @@ class PortfolioView(APIView):
         return Response(serializer.data)
     
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class ContactMeCreateView(APIView):
     """
         View to handle the creation of contact me messages and sending emails.
