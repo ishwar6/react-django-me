@@ -10,7 +10,8 @@ from .utils import send_email
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from .pagination import CommentPagination, CustomPagination
-
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 class BlogsGetView(APIView):
     """
         View to retrieve blog section data.
@@ -96,7 +97,7 @@ class BlogsGetView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class BlogCommentsCreateView(APIView):
     """
         View to retrieve and create comments for a specific blog.
@@ -122,6 +123,8 @@ class BlogCommentsCreateView(APIView):
                 "comment": "This is a great blog!"
             }
     """
+    permission_classes = []
+    authentication_classes = []
     def get(self, request):
         my_blog = request.GET.get("my_blog")
 
