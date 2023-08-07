@@ -1,17 +1,19 @@
-from django.db import models
-
-from django.db import models
-from django.core.validators import EmailValidator
-from taggit.managers import TaggableManager
-from django.core.validators import RegexValidator
-import os
-import uuid
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+from django.core.validators import RegexValidator
+from taggit.managers import TaggableManager
+from django.utils.text import slugify
 from django.utils import timezone
-import re
 from .utils import send_email
+from django.db import models
+import uuid
+import os
+import re
+from .utils import generate_unique_6_length_character, generate_unique_slug_value
+from django.urls import reverse
 # Create your models here.
+
 
 
 class BaseModelMixin(models.Model):
@@ -609,11 +611,34 @@ class Projects(BaseModelMixin):
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
                             help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+    slug = models.SlugField(unique=True, null=True, blank=True, editable=False, 
+                            help_text="Not editable field.")
+
+    def get_absolute_url(self):
+        return reverse('projects', args=[str(self.slug)])
+
+    def generate_slug(self):
+        queryset = Projects.objects.filter(slug__isnull = True)
+        for obj in queryset:
+            name = obj.name
+            obj.slug = generate_unique_slug_value(name)
+            counter = 1
+            while Projects.objects.filter(slug=obj.slug).exists():
+                obj.slug = f"{obj.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
+            obj.save()
+
     
     def save(self, *args, **kwargs):
         string = self.description
-        
         self.description = replace_custom_symbols_with_elements(string)
+        
+        if not self.slug:
+            self.slug = slugify(self.name)
+            counter = 1
+            while Projects.objects.filter(slug=self.slug).exists():
+                self.slug = f"{self.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
 
         super(Projects, self).save(*args, **kwargs)
     
@@ -816,6 +841,7 @@ class MyBlogSection(BaseModelMixin):
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
                             help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
     comment_count = models.BigIntegerField(default= 0)
+    slug = models.SlugField(unique=True, null=True, blank=True, editable=False)
 
     tags = TaggableManager()
     
@@ -829,12 +855,33 @@ class MyBlogSection(BaseModelMixin):
             # Update the comment_count for the blog
             blog.comment_count = comment_count
             blog.save()
-        
 
+    def generate_slug(self):
+        queryset = MyBlogSection.objects.filter(slug__isnull = True)
+        for obj in queryset:
+            name = obj.name
+            obj.slug = generate_unique_slug_value(name)
+            counter = 1
+            while MyBlogSection.objects.filter(slug=obj.slug).exists():
+                obj.slug = f"{obj.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
+            obj.save()
+        
+    
+    def get_absolute_url(self):
+        return reverse('my-blogs', args=[str(self.slug)])
+    
     def save(self, *args, **kwargs):
         string = self.description
-        
         self.description = replace_custom_symbols_with_elements(string)
+
+    
+        if not self.slug:
+            self.slug = slugify(self.name)
+            counter = 1
+            while MyBlogSection.objects.filter(slug=self.slug).exists():
+                self.slug = f"{self.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
 
         super(MyBlogSection, self).save(*args, **kwargs)
     

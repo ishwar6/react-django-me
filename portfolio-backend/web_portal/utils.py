@@ -3,9 +3,11 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
-
+from django.utils.text import slugify
+import uuid
 import os
 import sys
+
 
 from dotenv import load_dotenv
 
@@ -45,3 +47,20 @@ Name of person : {name}
         server.send_message(msg)
 
     print("Email sent successfully!")
+
+
+def generate_unique_6_length_character():
+    # Generate unique uuid for slug field
+    unique_id = str(uuid.uuid4())
+    unique_6_length_character = unique_id[:6]
+    
+    return unique_6_length_character
+
+
+
+def generate_unique_slug_value(value):
+    slug = slugify(value)
+    # Check if the generated slug already exists
+    slug = f"{slug}-{generate_unique_6_length_character()}"
+    
+    return slug

@@ -270,7 +270,7 @@ class MyBlogSubheadingInline(admin.TabularInline):
 class MyBlogSectionAdmin(admin.ModelAdmin):
     inlines = [MyBlogSubheadingInline]
     form = MyBlogSectionForm 
-    list_display = ('id', "name", "service", "description", "is_main", "file", "comment_count",)
+    list_display = ('id', "name", "slug","service", "description", "is_main", "file", "comment_count",)
 
 admin.site.register(MyBlogSection, MyBlogSectionAdmin)
 
@@ -331,7 +331,7 @@ class ProjectSubheadingInline(admin.TabularInline):
 class ProjectsAdmin(admin.ModelAdmin):
     inlines = [ProjectSubheadingInline]
     form = ProjectsForm 
-    list_display = ('id', "name", "service", "description", "is_main", "file",)
+    list_display = ('id', "name", "slug", "service", "description", "is_main", "file",)
     def clean(self, form):
         cleaned_data = super().clean()
 

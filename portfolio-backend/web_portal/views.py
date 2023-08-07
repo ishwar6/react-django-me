@@ -12,6 +12,10 @@ from rest_framework import status
 from .pagination import CommentPagination, CustomPagination
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from datetime import datetime
+import time
+from django.db.models import Q
+
 class BlogsGetView(APIView):
     """
         View to retrieve blog section data.
@@ -33,26 +37,61 @@ class BlogsGetView(APIView):
             GET /blogs/?recent=True
             GET /blogs/
     """
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        start_time = time.time()
+        slug_queryset = MyBlogSection.objects.filter(Q(slug__isnull=True) | Q(slug='')).exists()
+        if slug_queryset:
+            obj = MyBlogSection()
+            obj.generate_slug()
         my_blog = request.GET.get("my_blog")
         recent = request.GET.get("recent")
         tag = request.GET.get("tag")
         MyBlogSection.update_blog_comment_count()
-
-        if my_blog:
-            # If my_blog is provided in the query string, filter the queryset
+        slug = kwargs.get('slug')
+        if slug:
+            # If pk is provided in the query string, filter the queryset
             try:
-                blog_instance = MyBlogSection.objects.get(id=my_blog)
+                blog_instance = MyBlogSection.objects.get(slug=slug)
                 serializer = SingleBlogSectionSerializer(blog_instance)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                response_data = serializer.data
+                data = {
+                    "results": response_data
+                }
+                response_time = time.time() - start_time
+                response_times = f"{response_time:.6f} seconds"
+
+                meta_data = {
+                    "api": f"api/{slug}/", 
+                    "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "status": "success",  
+                    "response_time": response_times
+                }
+
+                data["meta"] = meta_data
+                return Response(data, status=status.HTTP_200_OK)
             except MyBlogSection.DoesNotExist:
-                return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Blog not found."}, status=status.HTTP_404_NOT_FOUND)
             
         if recent:
             # If recent is provided in the query string, filter the queryset
             blogs = MyBlogSection.objects.all().order_by('-created_at')[:3]
             serializer = MyBlogSectionSerializer(blogs, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            response_data = serializer.data
+            data = {
+                "results": response_data
+            }
+            response_time = time.time() - start_time
+            response_times = f"{response_time:.6f} seconds"
+
+            meta_data = {
+                "api": f"api/blogs/?recent={recent}", 
+                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "status": "success",  
+                "response_time": response_times
+            }
+
+            data["meta"] = meta_data
+            return Response(data, status=status.HTTP_200_OK)
 
         if tag:
             # If tag is provided in the query string, filter the queryset
@@ -78,8 +117,22 @@ class BlogsGetView(APIView):
                 "data": serializer.data,
                 "all_tags":all_tags
             }
-            return Response(response_data, status=status.HTTP_200_OK)
-            
+            data = {
+                "results": response_data
+            }
+            response_time = time.time() - start_time
+            response_times = f"{response_time:.6f} seconds"
+
+            meta_data = {
+                "api": f"api/blogs/?tag={tag}", 
+                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "status": "success",  
+                "response_time": response_times
+            }
+
+            data["meta"] = meta_data
+            return Response(data, status=status.HTTP_200_OK)
+
         # If my_blog, tag and recent is not provided, return all blogs
         queryset = MyBlogSection.objects.all().order_by('-created_at')
         paginator = CustomPagination()
@@ -94,7 +147,21 @@ class BlogsGetView(APIView):
             "data": serializer.data,
             "all_tags":all_tags
         }
-        return Response(response_data, status=status.HTTP_200_OK)
+        data = {
+            "results": response_data
+        }
+        response_time = time.time() - start_time
+        response_times = f"{response_time:.6f} seconds"
+
+        meta_data = {
+            "api": "api/blogs/", 
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "success",  
+            "response_time": response_times
+        }
+
+        data["meta"] = meta_data
+        return Response(data, status=status.HTTP_200_OK)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -126,6 +193,7 @@ class BlogCommentsCreateView(APIView):
     permission_classes = []
     authentication_classes = []
     def get(self, request):
+        start_time = time.time()
         my_blog = request.GET.get("my_blog")
 
         if my_blog:
@@ -144,7 +212,21 @@ class BlogCommentsCreateView(APIView):
                 "previous_link": paginator.get_previous_link(),
                 "data": serializer.data
             }
-            return Response(response_data, status=status.HTTP_200_OK)
+            data = {
+                "results": response_data
+            }
+            response_time = time.time() - start_time
+            response_times = f"{response_time:.6f} seconds"
+
+            meta_data = {
+                "api": f"api/blog-comments/?my_blog={my_blog}", 
+                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "status": "success",  
+                "response_time": response_times
+            }
+
+            data["meta"] = meta_data
+            return Response(data, status=status.HTTP_200_OK)
             
         return Response({"Error":"Blog id is missing"}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -179,10 +261,26 @@ class PortfolioView(APIView):
             GET /
     """
     def get(self, request):
+        start_time = time.time()
         navbar_instance = Navbar.objects.first()
         # Serialize the portfolio data using the PortfolioSerializer
         serializer = PortfolioSerializer(navbar_instance)
-        return Response(serializer.data)
+        response_data = serializer.data
+        data = {
+            "results": response_data
+        }
+        response_time = time.time() - start_time
+        response_times = f"{response_time:.6f} seconds"
+
+        meta_data = {
+            "api": "api/home/", 
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "success",  
+            "response_time": response_times
+        }
+
+        data["meta"] = meta_data
+        return Response(data, status=status.HTTP_200_OK)
     
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -248,25 +346,60 @@ class ProjectsGetView(APIView):
             GET /projects/?recent=True
             GET /projects/
     """
-    def get(self, request):
-        project_id = request.GET.get("project_id")
+    def get(self, request, *args, **kwargs):
+        start_time = time.time()
+        slug_queryset = Projects.objects.filter(Q(slug__isnull=True) | Q(slug='')).exists()
+        if slug_queryset:
+            obj = Projects()
+            obj.generate_slug()
         recent = request.GET.get("recent")
-
-        if project_id:
-            # If project_id is provided in the query string, filter the queryset
+        slug = kwargs.get('slug')
+        if slug:
+            # If slug is provided in the query string, filter the queryset
             try:
-                project_instance = Projects.objects.get(id=project_id)
+                project_instance = Projects.objects.get(slug=slug)
                 serializer = ProjectsSerializer(project_instance)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                response_data = serializer.data
+                data = {
+                    "results": response_data
+                }
+                response_time = time.time() - start_time
+                response_times = f"{response_time:.6f} seconds"
+
+                meta_data = {
+                    "api": f"api/projects/{slug}/", 
+                    "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "status": "success",  
+                    "response_time": response_times
+                }
+
+                data["meta"] = meta_data
+                return Response(data, status=status.HTTP_200_OK)
             except Projects.DoesNotExist:
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
+
             
         if recent:
             # If recent is provided in the query string, filter the queryset
             try:
                 project_instance = Projects.objects.all().order_by('-created_at')[:3]
                 serializer = ProjectsSerializer(project_instance, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                response_data = serializer.data
+                data = {
+                    "results": response_data
+                }
+                response_time = time.time() - start_time
+                response_times = f"{response_time:.6f} seconds"
+
+                meta_data = {
+                    "api": "api/projects/?recent={recent}", 
+                    "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "status": "success",  
+                    "response_time": response_times
+                }
+
+                data["meta"] = meta_data
+                return Response(data, status=status.HTTP_200_OK)
             except Projects.DoesNotExist:
                 return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
             
@@ -281,4 +414,21 @@ class ProjectsGetView(APIView):
             "previous_link": paginator.get_previous_link(),
             "data": serializer.data
         }
-        return Response(response_data, status=status.HTTP_200_OK)
+        data = {
+            "results": response_data
+        }
+        data = {
+            "results": response_data
+        }
+        response_time = time.time() - start_time
+        response_times = f"{response_time:.6f} seconds"
+
+        meta_data = {
+            "api": "api/projects/", 
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "success",  
+            "response_time": response_times
+        }
+
+        data["meta"] = meta_data
+        return Response(data, status=status.HTTP_200_OK)
