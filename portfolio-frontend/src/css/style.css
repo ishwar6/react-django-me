@@ -12716,8 +12716,6 @@ h5,
   height: 100px;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: break-spaces;
-  word-break: break-all;
   line-height: 2;
 }
 
@@ -12741,8 +12739,6 @@ h5,
   height: 100px;
   text-overflow: ellipsis;
   overflow: scroll;
-  white-space: break-spaces;
-  word-break: break-all;
   line-height: 2;
   &::-webkit-scrollbar {
     display: none;
@@ -13907,6 +13903,10 @@ textarea.form-control {
 }
 
 #ftco-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem!important;
   position: fixed;
   width: 96px;
   height: 96px;

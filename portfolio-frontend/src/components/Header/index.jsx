@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { scroller } from "react-scroll";
 
-export function handleSectionNavigation(location,navigate,sectionName) {
+export function handleSectionNavigation(location, navigate, sectionName) {
   if (location.pathname.length > 2) {
     navigate("/");
   }
@@ -41,7 +41,7 @@ function Header({ sections, navTitle }) {
             {sections?.home && (
               <li className="nav-item" id="home">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"home_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "home_section")}
                   className="nav-link"
                 >
                   <span>Home</span>
@@ -51,7 +51,7 @@ function Header({ sections, navTitle }) {
             {sections?.about && (
               <li className="nav-item">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"about_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "about_section")}
                   className="nav-link"
                 >
                   <span>About</span>
@@ -61,7 +61,7 @@ function Header({ sections, navTitle }) {
             {sections?.education && (
               <li className="nav-item">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"education_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "education_section")}
                   className="nav-link"
                 >
                   <span>Education</span>
@@ -71,7 +71,7 @@ function Header({ sections, navTitle }) {
             {sections?.experience && (
               <li className="nav-item">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"experience_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "experience_section")}
                   className="nav-link"
                 >
                   <span>Experience</span>
@@ -82,7 +82,7 @@ function Header({ sections, navTitle }) {
             {sections?.services && (
               <li className="nav-item">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"services_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "services_section")}
                   className="nav-link"
                 >
                   <span>Services</span>
@@ -93,7 +93,7 @@ function Header({ sections, navTitle }) {
             {sections?.skills && (
               <li className="nav-item">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"skills_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "skills_section")}
                   className="nav-link"
                 >
                   <span>Skills</span>
@@ -127,10 +127,20 @@ function Header({ sections, navTitle }) {
                 </a>
               </li>
             )}
+            {sections?.youtube && (
+              <li className="nav-item">
+                <a
+                  onClick={() => handleSectionNavigation(location, navigate, "youtube_section")}
+                  className="nav-link"
+                >
+                  <span>Youtube</span>
+                </a>
+              </li>
+            )}
             {sections?.contact && (
               <li className="nav-item">
                 <a
-                  onClick={() => handleSectionNavigation(location,navigate,"contact_section")}
+                  onClick={() => handleSectionNavigation(location, navigate, "contact_section")}
                   className="nav-link"
                 >
                   <span>Contact</span>

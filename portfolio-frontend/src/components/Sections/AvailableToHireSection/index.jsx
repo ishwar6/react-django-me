@@ -19,7 +19,7 @@ function AvailableToHireSection({ hireMeData }) {
     >
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-md-7 ftco-animate text-center">
+          <div className="col-md-6 ftco-animate text-center">
             {hireMeData?.main_text !== "" && (
               <h3>{parse(hireMeData?.main_text)}</h3>
             )}

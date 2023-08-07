@@ -5,7 +5,7 @@ function YoutubeSection({ youtubeData }) {
     <>
       {youtubeData?.youtube_links?.length > 0 && (
         <>
-          <div className="ftco_section" id="my_blog_section">
+          <div className="ftco_section" id="youtube_section">
             <div className="container">
               <div className="row justify-content-center mb-5 pb-5">
                 <div className="col-md-7 heading_section text-center ftco-animate">
