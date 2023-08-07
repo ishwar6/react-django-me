@@ -10,12 +10,10 @@ from .utils import send_email
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from .pagination import CommentPagination, CustomPagination
-
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from datetime import datetime
 import time
-
-
-
 
 class BlogsGetView(APIView):
     """
@@ -37,10 +35,7 @@ class BlogsGetView(APIView):
             GET /blogs/?tag=AI
             GET /blogs/?recent=True
             GET /blogs/
-            GET /blogs/<slug>/
     """
-
-
     def get(self, request, *args, **kwargs):
         start_time = time.time()
         my_blog = request.GET.get("my_blog")
@@ -116,29 +111,21 @@ class BlogsGetView(APIView):
         data = {
             "results": response_data
         }
-
-        response = Response(data)
-
-        # Get all the response headers
-        # response_headers = dict(request.META.items())
-        
         response_time = time.time() - start_time
         response_times = f"{response_time:.6f} seconds"
 
         meta_data = {
-            "api": "api/blogs/",  # Your API version
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # Current date and time
-            "status": "success",  # Your API response status
-            "response_time": response_times,
-            "response":response
+            "api": "api/blogs/", 
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "success",  
+            "response_time": response_times
         }
 
-        # Add the meta data to the API response
-        data['meta'] = meta_data
+        data["meta"] = meta_data
         return Response(data, status=status.HTTP_200_OK)
 
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class BlogCommentsCreateView(APIView):
     """
         View to retrieve and create comments for a specific blog.
@@ -164,7 +151,9 @@ class BlogCommentsCreateView(APIView):
                 "comment": "This is a great blog!"
             }
     """
-    def get(self, request, *args, **kwargs):
+    permission_classes = []
+    authentication_classes = []
+    def get(self, request):
         my_blog = request.GET.get("my_blog")
 
         if my_blog:
@@ -217,15 +206,14 @@ class PortfolioView(APIView):
         Example:
             GET /
     """
-    def get(self, request, *args, **kwargs):
-        start_time = time.time()
+    def get(self, request):
         navbar_instance = Navbar.objects.first()
         # Serialize the portfolio data using the PortfolioSerializer
         serializer = PortfolioSerializer(navbar_instance)
         return Response(serializer.data)
     
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class ContactMeCreateView(APIView):
     """
         View to handle the creation of contact me messages and sending emails.
@@ -287,9 +275,7 @@ class ProjectsGetView(APIView):
             GET /projects/?project_id=1
             GET /projects/?recent=True
             GET /projects/
-            GET /projects/<slug>/
     """
-    
     def get(self, request, *args, **kwargs):
         start_time = time.time()
         project_id = request.GET.get("project_id")
@@ -336,23 +322,18 @@ class ProjectsGetView(APIView):
         data = {
             "results": response_data
         }
-
-        response = Response(data)
-
-        # Get all the response headers
-        # response_headers = dict(request.META.items())
-        
+        data = {
+            "results": response_data
+        }
         response_time = time.time() - start_time
         response_times = f"{response_time:.6f} seconds"
 
         meta_data = {
-            "api": "api/blogs/",  # Your API version
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # Current date and time
-            "status": "success",  # Your API response status
-            "response_time": response_times,
-            "response":response
+            "api": "api/blogs/", 
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "success",  
+            "response_time": response_times
         }
 
-        # Add the meta data to the API response
-        data['meta'] = meta_data
+        data["meta"] = meta_data
         return Response(data, status=status.HTTP_200_OK)

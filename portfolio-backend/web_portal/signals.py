@@ -13,12 +13,14 @@ def migration_applied_callback(sender, **kwargs):
         for obj in project_queryset:
             if not obj.slug:
                 obj.slug = generate_unique_slug_value(obj.name)
+                obj.save()
         
         
         blog_queryset = Projects.objects.all()
         for obj in blog_queryset:
             if not obj.slug:
                 obj.slug = generate_unique_slug_value(obj.name)
+                obj.save()
 
 
         migration_applied_signal.send(sender=sender)
