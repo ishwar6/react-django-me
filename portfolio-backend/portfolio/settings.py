@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'taggit',
     'corsheaders',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [

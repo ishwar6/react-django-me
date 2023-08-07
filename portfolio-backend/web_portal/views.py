@@ -11,6 +11,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from .pagination import CommentPagination, CustomPagination
 
+from datetime import datetime
+import time
+
+
+
+
 class BlogsGetView(APIView):
     """
         View to retrieve blog section data.
@@ -31,12 +37,26 @@ class BlogsGetView(APIView):
             GET /blogs/?tag=AI
             GET /blogs/?recent=True
             GET /blogs/
+            GET /blogs/<slug>/
     """
-    def get(self, request):
+
+
+    def get(self, request, *args, **kwargs):
+        start_time = time.time()
         my_blog = request.GET.get("my_blog")
         recent = request.GET.get("recent")
         tag = request.GET.get("tag")
         MyBlogSection.update_blog_comment_count()
+        slug = kwargs.get('slug')
+        if slug:
+            # If pk is provided in the query string, filter the queryset
+            try:
+                blog_instance = MyBlogSection.objects.get(slug=slug)
+                serializer = SingleBlogSectionSerializer(blog_instance)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except MyBlogSection.DoesNotExist:
+                return Response({"error": "Blog not found."}, status=status.HTTP_404_NOT_FOUND)
+
 
         if my_blog:
             # If my_blog is provided in the query string, filter the queryset
@@ -45,7 +65,7 @@ class BlogsGetView(APIView):
                 serializer = SingleBlogSectionSerializer(blog_instance)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except MyBlogSection.DoesNotExist:
-                return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Blog not found."}, status=status.HTTP_404_NOT_FOUND)
             
         if recent:
             # If recent is provided in the query string, filter the queryset
@@ -78,7 +98,7 @@ class BlogsGetView(APIView):
                 "all_tags":all_tags
             }
             return Response(response_data, status=status.HTTP_200_OK)
-            
+
         # If my_blog, tag and recent is not provided, return all blogs
         queryset = MyBlogSection.objects.all().order_by('-created_at')
         paginator = CustomPagination()
@@ -93,7 +113,29 @@ class BlogsGetView(APIView):
             "data": serializer.data,
             "all_tags":all_tags
         }
-        return Response(response_data, status=status.HTTP_200_OK)
+        data = {
+            "results": response_data
+        }
+
+        response = Response(data)
+
+        # Get all the response headers
+        # response_headers = dict(request.META.items())
+        
+        response_time = time.time() - start_time
+        response_times = f"{response_time:.6f} seconds"
+
+        meta_data = {
+            "api": "api/blogs/",  # Your API version
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # Current date and time
+            "status": "success",  # Your API response status
+            "response_time": response_times,
+            "response":response
+        }
+
+        # Add the meta data to the API response
+        data['meta'] = meta_data
+        return Response(data, status=status.HTTP_200_OK)
 
 
 
@@ -122,7 +164,7 @@ class BlogCommentsCreateView(APIView):
                 "comment": "This is a great blog!"
             }
     """
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         my_blog = request.GET.get("my_blog")
 
         if my_blog:
@@ -175,7 +217,8 @@ class PortfolioView(APIView):
         Example:
             GET /
     """
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        start_time = time.time()
         navbar_instance = Navbar.objects.first()
         # Serialize the portfolio data using the PortfolioSerializer
         serializer = PortfolioSerializer(navbar_instance)
@@ -244,10 +287,22 @@ class ProjectsGetView(APIView):
             GET /projects/?project_id=1
             GET /projects/?recent=True
             GET /projects/
+            GET /projects/<slug>/
     """
-    def get(self, request):
+    
+    def get(self, request, *args, **kwargs):
+        start_time = time.time()
         project_id = request.GET.get("project_id")
         recent = request.GET.get("recent")
+        slug = kwargs.get('slug')
+        if slug:
+            # If slug is provided in the query string, filter the queryset
+            try:
+                project_instance = Projects.objects.get(slug=slug)
+                serializer = ProjectsSerializer(project_instance)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Projects.DoesNotExist:
+                return Response({"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
 
         if project_id:
             # If project_id is provided in the query string, filter the queryset
@@ -278,4 +333,26 @@ class ProjectsGetView(APIView):
             "previous_link": paginator.get_previous_link(),
             "data": serializer.data
         }
-        return Response(response_data, status=status.HTTP_200_OK)
+        data = {
+            "results": response_data
+        }
+
+        response = Response(data)
+
+        # Get all the response headers
+        # response_headers = dict(request.META.items())
+        
+        response_time = time.time() - start_time
+        response_times = f"{response_time:.6f} seconds"
+
+        meta_data = {
+            "api": "api/blogs/",  # Your API version
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # Current date and time
+            "status": "success",  # Your API response status
+            "response_time": response_times,
+            "response":response
+        }
+
+        # Add the meta data to the API response
+        data['meta'] = meta_data
+        return Response(data, status=status.HTTP_200_OK)
