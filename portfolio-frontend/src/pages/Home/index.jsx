@@ -15,55 +15,61 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/Layout";
 import Loader from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet';
+
 
 function Home() {
   const pageLoading = useSelector((state) => state?.pageLoading?.pageLoading);
   const [homeData, setHomeData] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getHomePageData(setHomeData, dispatch, navigate);
   }, []);
-
   return (
     <>
       {pageLoading ? <Loader /> :
         <Layout>
-          {homeData && (
+          {homeData?.meta && 
+          <Helmet>
+            <title>{homeData?.meta?.title}</title>
+            <meta name="description" content={homeData?.meta?.description} />
+          </Helmet>}
+          {homeData && homeData?.results && (
             <>
-              {homeData?.sections?.home && (
-                <HomeSection slidesData={homeData?.home_section} />
+              {homeData?.results?.sections?.home && (
+                <HomeSection slidesData={homeData?.results?.home_section} />
               )}
-              {homeData?.sections?.about && (
-                <AboutSection aboutData={homeData?.about_section} />
+              {homeData?.results?.sections?.about && (
+                <AboutSection aboutData={homeData?.results?.about_section} />
               )}
-              {homeData?.sections?.education && (
-                <EducationSection educationData={homeData?.education_section} />
+              {homeData?.results?.sections?.education && (
+                <EducationSection educationData={homeData?.results?.education_section} />
               )}
-              {homeData?.sections?.experience && (
-                <ExperienceSection experienceData={homeData?.experience_section} />
+              {homeData?.results?.sections?.experience && (
+                <ExperienceSection experienceData={homeData?.results?.experience_section} />
               )}
-              {homeData?.sections?.services && (
-                <ServicesSection servicesData={homeData?.services_section} />
+              {homeData?.results?.sections?.services && (
+                <ServicesSection servicesData={homeData?.results?.services_section} />
               )}
-              {homeData?.sections?.skills && (
-                <SkillsSection skillsData={homeData?.skills_section} />
+              {homeData?.results?.sections?.skills && (
+                <SkillsSection skillsData={homeData?.results?.skills_section} />
               )}
-              {homeData?.sections?.projects && (
-                <ProjectsSection projectsData={homeData?.projects_section} />
+              {homeData?.results?.sections?.projects && (
+                <ProjectsSection projectsData={homeData?.results?.projects_section} />
               )}
-              {homeData?.sections?.my_blog && (
-                <BlogsSection blogsData={homeData?.blogs_section} />
+              {homeData?.results?.sections?.my_blog && (
+                <BlogsSection blogsData={homeData?.results?.blogs_section} />
               )}
-              {homeData?.sections?.youtube && (
-                <YoutubeSection youtubeData={homeData?.youtube_videos_link} />
+              {homeData?.results?.sections?.youtube && (
+                <YoutubeSection youtubeData={homeData?.results?.youtube_videos_link} />
               )}
-              {homeData?.sections?.hire_me && (
-                <AvailableToHireSection hireMeData={homeData?.hire_me_section} />
+              {homeData?.results?.sections?.hire_me && (
+                <AvailableToHireSection hireMeData={homeData?.results?.hire_me_section} />
               )}
-              {homeData?.sections?.my_blog && (
-                <ContactSection contactData={homeData?.about_section} />
+              {homeData?.results?.sections?.my_blog && (
+                <ContactSection contactData={homeData?.results?.about_section} />
               )}
             </>
           )}

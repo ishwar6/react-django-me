@@ -12,6 +12,7 @@ import { descriptionStyles } from "../BlogDetailsPage";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Layout from "../../components/Layout";
+import { Helmet } from "react-helmet";
 
 function ProjectDetailsPage() {
   const navigate = useNavigate();
@@ -20,19 +21,25 @@ function ProjectDetailsPage() {
   const pageLoading = useSelector((state) => state?.pageLoading?.pageLoading);
   const { params } = useParams();
   const [details, setDetails] = useState(null);
+  const [metaData, setMetaData] = useState(null);
   const [recentList, setRecentListData] = useState([]);
   const urlPrefix = location.pathname.split("/")[1];
   const options = {
     replace: ({ attribs }) => attribs && attribs.class === 'gist' && <Gist {...attributesToProps(attribs)} />
   }
   useEffect(() => {
-    getDetailsData(dispatch, navigate, urlPrefix + "/?" + params, setDetails);
+    getDetailsData(dispatch, navigate, urlPrefix + "/" + params + "/", setDetails, setMetaData);
     getRecentList(urlPrefix + "/?recent=true", setRecentListData);
   }, []);
   return (
     <>
       {pageLoading ? <Loader /> :
         <Layout>
+          {metaData &&
+            <Helmet>
+              <title>{metaData?.title}</title>
+              <meta name="description" content={metaData?.description} />
+            </Helmet>}
           {details && (
             <>
               <div

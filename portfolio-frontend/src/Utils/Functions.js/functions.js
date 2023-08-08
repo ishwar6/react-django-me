@@ -1,13 +1,9 @@
-export const handleDetailPageNavigation = (navigate, pathPrefix, item,reload) => {
+export const handleDetailPageNavigation = (navigate, pathPrefix, item, reload) => {
 
     let url;
-    if (pathPrefix === "projects") {
-        url = `/${pathPrefix}/project_id=${item.id}`;
-    } else {
-        url = `/${pathPrefix}/my_blog=${item.id}`;
-    }
+    url = `/${pathPrefix}/${item.slug}`;
     navigate(url);
-    if(reload){
+    if (reload) {
         window.location.reload();
     }
 

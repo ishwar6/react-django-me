@@ -4,7 +4,7 @@ import Footer from "../Footer";
 import { useSelector } from "react-redux";
 
 function Layout({ children }) {
-  const homeData = useSelector((state) => state?.homeData?.homeData);
+  const homeData = useSelector((state) => state?.homeData?.homeData.results);
   return (
     <>
       <Header sections={homeData?.sections} navTitle={homeData?.nav_name} />

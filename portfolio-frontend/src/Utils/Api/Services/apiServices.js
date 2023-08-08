@@ -12,7 +12,7 @@ export const getHomePageData = (setHomeData, dispatch, navigate) => {
         dispatch(setHomePageData(res.data));
         setHomeData(res.data);
         setTimeout(() => {
-          dispatch(setPageLoading(true));
+          dispatch(setPageLoading(false));
         }, 500)
       })
       .catch((err) => {
@@ -42,7 +42,7 @@ export const getListsData = (dispatch, navigate, location, listData, setListData
         if (listData) {
           setListData((prev) => ({
             ...res.data,
-            data: [...prev.data, ...res.data.data],
+            results: { ...prev.results, data: [...prev.results.data, ...res.data.results.data] },
           }));
         } else {
           setListData(res.data);
@@ -63,13 +63,14 @@ export const getListsData = (dispatch, navigate, location, listData, setListData
   }
 };
 
-export const getDetailsData = (dispatch, navigate, params, setDetails) => {
+export const getDetailsData = (dispatch, navigate, params, setDetails, setMetaData) => {
   try {
     dispatch(setPageLoading(true));
     axiosClient
       .get(params)
       .then((res) => {
-        setDetails(res.data);
+        setMetaData(res.data.meta);
+        setDetails(res.data.results);
         setTimeout(() => {
           dispatch(setPageLoading(false));
         }, 500)
@@ -93,9 +94,9 @@ export const getCommentsData = (params, comments, setCommentsData, setCommentsLo
       .get(params)
       .then((res) => {
         if (comments && more) {
-          setCommentsData((prev) => ({ ...res.data, data: [...prev.data, ...res.data.data] }));
+          setCommentsData((prev) => ({ ...res.data.results, data: [...prev.data, ...res.data.results.data] }));
         } else {
-          setCommentsData(res.data);
+          setCommentsData(res.data.results);
         }
         setCommentsLoader(false);
       })
@@ -114,7 +115,7 @@ export const getRecentList = (params, setRecentListData) => {
     axiosClient
       .get(params)
       .then((res) => {
-        setRecentListData((prev) => ([...res.data]));
+        setRecentListData((prev) => ([...res.data.results]));
       })
       .catch((err) => console.log(err));
   } catch (error) {

@@ -16,6 +16,7 @@ import RecentSection from "../../components/Sections/RecentSection";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Layout from "../../components/Layout";
+import { Helmet } from "react-helmet";
 
 export const descriptionStyles = {
   fontFamily: "source-serif-pro, Georgia, Cambria, 'Times New Roman', Times, serif",
@@ -29,6 +30,7 @@ function BlogDetailsPage() {
   const pageLoading = useSelector((state) => state?.pageLoading?.pageLoading);
   const { params } = useParams();
   const [details, setDetails] = useState(null);
+  const [metaData, setMetaData] = useState(null);
   const [comments, setCommentsData] = useState(null);
   const [recentList, setRecentListData] = useState([]);
   const [commentsLoader, setCommentsLoader] = useState(false);
@@ -44,9 +46,9 @@ function BlogDetailsPage() {
   }
 
   useEffect(() => {
-    getDetailsData(dispatch, navigate, urlPrefix + "/?" + params, setDetails);
+    getDetailsData(dispatch, navigate, urlPrefix + "/" + params + "/", setDetails, setMetaData);
     getCommentsData(
-      `/blog-comments/?my_blog=${params.split("=")[1]}`,
+      `/blog-comments/${params}/`,
       comments,
       setCommentsData,
       setCommentsLoader
@@ -57,6 +59,11 @@ function BlogDetailsPage() {
     <>
       {pageLoading ? <Loader /> :
         <Layout>
+          {metaData &&
+            <Helmet>
+              <title>{metaData?.title}</title>
+              <meta name="description" content={metaData?.description} />
+            </Helmet>}
           {details && (
             <>
               <div
@@ -238,7 +245,7 @@ function BlogDetailsPage() {
                                   <a
                                     onClick={() => {
                                       getCommentsData(
-                                        comments.next_link.split(BASEURL)[1],
+                                        comments.next_link.split(`${BASEURL}/api`)[1],
                                         comments,
                                         setCommentsData,
                                         setCommentsLoader,
