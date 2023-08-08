@@ -266,7 +266,7 @@ function BlogDetailsPage() {
                           <h3 className="mb-5">Leave a comment</h3>
                           <Formik
                             initialValues={{
-                              id: details?.id,
+                              id: params,
                               name: "",
                               email: "",
                               message: "",
@@ -277,7 +277,7 @@ function BlogDetailsPage() {
                               if (!formik.isSubmitting) {
                                 setTimeout(() => {
                                   getCommentsData(
-                                    `/blog-comments/?my_blog=${params.split("=")[1]}`,
+                                    `/blog-comments/${params}/`,
                                     comments,
                                     setCommentsData,
                                     setCommentsLoader,

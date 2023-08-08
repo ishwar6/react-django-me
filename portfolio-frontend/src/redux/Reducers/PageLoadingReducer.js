@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const loadingDataSlice = createSlice({
   name: "loading",
   initialState: {
-    pageLoading:true
+    pageLoading:false,
   },
   reducers: {
     setPageLoading:(state, { payload }) => {

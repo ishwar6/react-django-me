@@ -103,9 +103,8 @@ function ListPage() {
                   </div>
                   {listData?.results?.next_link && (
                     <a
-                      href=""
                       onClick={() => {
-                        getListsData(location.pathname, listData, setListData);
+                        getListsData(dispatch, navigate, location, listData, setListData,true);
                       }}
                       style={{
                         display: "flex",

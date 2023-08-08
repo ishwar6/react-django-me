@@ -27,22 +27,27 @@ export const getHomePageData = (setHomeData, dispatch, navigate) => {
   }
 };
 
-export const getListsData = (dispatch, navigate, location, listData, setListData) => {
+export const getListsData = (dispatch, navigate, location, listData, setListData,next) => {
   try {
     dispatch(setPageLoading(true));
     let url;
-    if (location.search !== "") {
-      url = location.pathname + location.search;
-    } else {
-      url = location.pathname;
+    if(next){
+      url = listData?.results?.next_link;
+    }else{
+      if (location.search !== "") {
+        url = location.pathname + location.search;
+      } else {
+        url = location.pathname;
+      }
     }
+    console.log(url)
     axiosClient
       .get(url)
       .then((res) => {
         if (listData) {
           setListData((prev) => ({
             ...res.data,
-            results: { ...prev.results, data: [...prev.results.data, ...res.data.results.data] },
+            results: { ...res.data?.results, data: [...prev?.results?.data, ...res.data?.results?.data] },
           }));
         } else {
           setListData(res.data);
@@ -69,8 +74,8 @@ export const getDetailsData = (dispatch, navigate, params, setDetails, setMetaDa
     axiosClient
       .get(params)
       .then((res) => {
-        setMetaData(res.data.meta);
-        setDetails(res.data.results);
+        setMetaData(res.data?.meta);
+        setDetails(res.data?.results);
         setTimeout(() => {
           dispatch(setPageLoading(false));
         }, 500)
@@ -94,9 +99,9 @@ export const getCommentsData = (params, comments, setCommentsData, setCommentsLo
       .get(params)
       .then((res) => {
         if (comments && more) {
-          setCommentsData((prev) => ({ ...res.data.results, data: [...prev.data, ...res.data.results.data] }));
+          setCommentsData((prev) => ({ ...res.data?.results, data: [...prev?.data, ...res.data?.results?.data] }));
         } else {
-          setCommentsData(res.data.results);
+          setCommentsData(res.data?.results);
         }
         setCommentsLoader(false);
       })
@@ -115,7 +120,7 @@ export const getRecentList = (params, setRecentListData) => {
     axiosClient
       .get(params)
       .then((res) => {
-        setRecentListData((prev) => ([...res.data.results]));
+        setRecentListData((prev) => ([...res.data?.results]));
       })
       .catch((err) => console.log(err));
   } catch (error) {
