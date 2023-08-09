@@ -26,7 +26,7 @@ function ProjectsSection({ projectsData }) {
                     key={index}
                     onClick={() => {
                       let url;
-                      url = `/projects/project_id=${project.id}`;
+                      url = `/projects/${project.slug}`;
                       navigate(url);
                     }}
                   >

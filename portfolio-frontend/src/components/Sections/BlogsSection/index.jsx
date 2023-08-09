@@ -28,7 +28,7 @@ function BlogsSection({ blogsData }) {
                       key={index}
                       onClick={() => {
                         let url;
-                        url = `/blogs/my_blog=${blog.id}`;
+                        url = `/blogs/${blog.slug}`;
                         navigate(url);
                       }}
                     >
