@@ -40,7 +40,6 @@ export const getListsData = (dispatch, navigate, location, listData, setListData
         url = location.pathname;
       }
     }
-    console.log(url)
     axiosClient
       .get(url)
       .then((res) => {
