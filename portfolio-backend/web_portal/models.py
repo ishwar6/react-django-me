@@ -13,6 +13,11 @@ import re
 from .utils import generate_unique_6_length_character, generate_unique_slug_value
 from django.urls import reverse
 # Create your models here.
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 
 
 
@@ -137,6 +142,25 @@ class Navbar(BaseModelMixin):
         if self.pk is None and Navbar.objects.exists():
             raise ValueError("Only one object is allowed.")
         super(Navbar, self).save(*args, **kwargs)
+
+
+
+
+class MetaDetails(BaseModelMixin):
+    home_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    home_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    blog_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    blog_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    project_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    project_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+
+    objects = SingleObjectManager()
+
+    def save(self, *args, **kwargs):
+        if self.pk is None and MetaDetails.objects.exists():
+            raise ValueError("Only one object is allowed.")
+        super(MetaDetails, self).save(*args, **kwargs)
+
 
 
 def unique_home_filename(instance, filename):
@@ -611,8 +635,11 @@ class Projects(BaseModelMixin):
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
                             help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
-    slug = models.SlugField(unique=True, null=True, blank=True, editable=False, 
+    slug = models.SlugField(max_length=300, unique=True, null=True, blank=True, editable=False, 
                             help_text="Not editable field.")
+    project_meta_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    project_meta_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    
 
     def get_absolute_url(self):
         return reverse('projects', args=[str(self.slug)])
@@ -841,7 +868,9 @@ class MyBlogSection(BaseModelMixin):
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
                             help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
     comment_count = models.BigIntegerField(default= 0)
-    slug = models.SlugField(unique=True, null=True, blank=True, editable=False)
+    slug = models.SlugField(max_length=300, unique=True, null=True, blank=True, editable=False)
+    blog_meta_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    blog_meta_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
 
     tags = TaggableManager()
     
@@ -994,8 +1023,11 @@ class BlogComments(BaseModelMixin):
         help_text="Enter your email address. like example@gmail.com",
         validators=[EmailValidator(message="Enter a valid email address.")]
     )
-    my_blog = models.ForeignKey(MyBlogSection, related_name="MyBlog_comments",
-        on_delete=models.CASCADE, null=True, blank=True)
+    my_blog = models.ForeignKey(MyBlogSection, 
+                                related_name="MyBlog_comments",
+        on_delete=models.CASCADE, 
+        null=True, blank=True, 
+        to_field='slug')
 
 
 class SocialMediaLinks(BaseModelMixin):

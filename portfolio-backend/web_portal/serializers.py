@@ -6,7 +6,9 @@ from .models import (Navbar, HomeSection, AboutSection, EducationSection, Experi
                      SkillSection, Projects, MyBlogSection, ProjectDescription, ProjectSubheading, MyBlogSubheading, 
                      Skill, Services,BlogComments,ContactMe,YouTubeLinks, SocialMediaLinks, BlogDescription, YouTube,
                      HireMeSection)
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ContactMeSerializer(serializers.ModelSerializer):
     """

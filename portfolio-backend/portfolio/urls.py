@@ -37,8 +37,9 @@ urlpatterns = [
     path('api/contact-me/', ContactMeCreateView.as_view(), name='contact-me'),
     path('api/blogs/', BlogsGetView.as_view(), name='my-blogs'),
     path('api/blogs/<slug:slug>/', BlogsGetView.as_view(), name='my-blogs'),
+    path('api/blog-comments/<slug:slug>/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
     path('api/blog-comments/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('api/sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 

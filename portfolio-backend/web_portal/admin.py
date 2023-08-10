@@ -4,13 +4,16 @@ from django.core.exceptions import ValidationError
 import re
 from PIL import Image
 from django.core.validators import URLValidator
+import logging
 
+logger = logging.getLogger(__name__)
 # Register your models here.
 from .models import (Projects, ProjectSubheading, MyBlogSubheading, MyBlogSection, Projects, HomeSection, Navbar, Skill, Services, 
                      ServiceSections, SkillSection, AboutSection, ProjectDescription, EducationSection, ExperienceSection, 
-                     ContactMe, BlogComments, YouTubeLinks, SocialMediaLinks, BlogDescription, HireMeSection, YouTube)
+                     ContactMe, BlogComments, YouTubeLinks, SocialMediaLinks, BlogDescription, HireMeSection, YouTube, MetaDetails)
 
 
+admin.site.register(MetaDetails)
 
 class SkillSectionInline(admin.TabularInline):
     """

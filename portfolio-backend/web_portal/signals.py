@@ -3,6 +3,10 @@ from django.dispatch import receiver
 from django.dispatch import Signal
 from .utils import generate_unique_slug_value
 from .models import Projects, MyBlogSection
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Define the custom signal
 migration_applied_signal = Signal()
 
