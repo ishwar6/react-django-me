@@ -15,21 +15,21 @@ function Footer({ sections, aboutData, socialLinks }) {
                 <ul className="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                   {socialLinks?.twitter && (
                     <li className="ftco-animate">
-                      <a href={socialLinks?.twitter}>
+                      <a target="blank" href={socialLinks?.twitter}>
                         <span className="icon-twitter"></span>
                       </a>
                     </li>
                   )}
                   {socialLinks?.facebook && (
                     <li className="ftco-animate">
-                      <a href={socialLinks?.facebook}>
+                      <a target="blank" href={socialLinks?.facebook}>
                         <span className="icon-facebook"></span>
                       </a>
                     </li>
                   )}
                   {socialLinks?.instagram && (
                     <li className="ftco-animate">
-                      <a href={socialLinks?.instagram}>
+                      <a target="blank" href={socialLinks?.instagram}>
                         <span className="icon-instagram"></span>
                       </a>
                     </li>
@@ -37,21 +37,21 @@ function Footer({ sections, aboutData, socialLinks }) {
 
                   {socialLinks?.github && (
                     <li className="ftco-animate">
-                      <a href={socialLinks?.github}>
+                      <a target="blank" href={socialLinks?.github}>
                         <span className="icon-github"></span>
                       </a>
                     </li>
                   )}
                   {socialLinks?.linkedin && (
                     <li className="ftco-animate">
-                      <a href={socialLinks?.linkedin}>
+                      <a target="blank" href={socialLinks?.linkedin}>
                         <span className="icon-linkedin"></span>
                       </a>
                     </li>
                   )}
                   {socialLinks?.youtube && (
                     <li className="ftco-animate">
-                      <a href={socialLinks?.youtube}>
+                      <a target="blank" href={socialLinks?.youtube}>
                         <span className="icon-youtube"></span>
                       </a>
                     </li>

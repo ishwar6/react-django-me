@@ -8,7 +8,7 @@ import { BASEURL } from "../../Utils/Api/axiosClient";
 import Gist from 'super-react-gist'
 import parse, { attributesToProps } from 'html-react-parser';
 import RecentSection from "../../components/Sections/RecentSection";
-import { descriptionStyles } from "../BlogDetailsPage";
+import { descriptionStyles, imgStyles } from "../BlogDetailsPage";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Layout from "../../components/Layout";
@@ -59,12 +59,18 @@ function ProjectDetailsPage() {
                       <h1 className="mb-3 bread">{details?.name}</h1>
                       <p className="breadcrumbs">
                         <span className="mr-2">
-                          <a href="index.html">
+                          <a href=""
+                            onClick={() => {
+                              navigate('/')
+                            }}>
                             Home <i className="ion-ios-arrow-forward"></i>
                           </a>
                         </span>
                         <span className="mr-2">
-                          <a href="blog.html">
+                          <a href=""
+                            onClick={() => {
+                              navigate(`/${urlPrefix}/`)
+                            }}>
                             {urlPrefix} <i className="ion-ios-arrow-forward"></i>
                           </a>
                         </span>
@@ -74,7 +80,7 @@ function ProjectDetailsPage() {
                   </div>
                 </div>
               </div>
-              <div className="ftco-section">
+              <div className="ftco-section" style={{ backgroundColor: "#1a1b1e" }}>
                 <div className="container">
                   <div className="row flex-column align-items-center">
                     <div className="col-lg-8 ftco-animate pt-3">
@@ -87,6 +93,7 @@ function ProjectDetailsPage() {
                             src={BASEURL + details?.file}
                             alt=""
                             className="img-fluid"
+                            style={imgStyles}
                           />
                         </p>
                       )}
@@ -94,7 +101,7 @@ function ProjectDetailsPage() {
                         <>
                           {details?.subheadings.map((subheading, index) => {
                             return (
-                              <div key={index}>
+                              <div key={index} style={{ marginTop: "5rem" }}>
                                 <h2 className="mb-3">{subheading?.tittle}</h2>
                                 {subheading?.file && (
                                   <p className="d-flex justify-content-center p-5">
@@ -102,6 +109,7 @@ function ProjectDetailsPage() {
                                       src={BASEURL + subheading?.file}
                                       alt=""
                                       className="img-fluid"
+                                      style={imgStyles}
                                     />
                                   </p>
                                 )}

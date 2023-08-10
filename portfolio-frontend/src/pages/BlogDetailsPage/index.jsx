@@ -19,8 +19,15 @@ import Layout from "../../components/Layout";
 import { Helmet } from "react-helmet";
 
 export const descriptionStyles = {
-  fontFamily: "source-serif-pro, Georgia, Cambria, 'Times New Roman', Times, serif",
-  fontSize: "1.3rem"
+  fontFamily: "Inter, sans-serif;",
+  fontSize: "1.25rem",
+  fontWeight: 300,
+  lineHeight: 2,
+  color: "white"
+}
+
+export const imgStyles = {
+  borderRadius: "20px"
 }
 
 function BlogDetailsPage() {
@@ -83,12 +90,19 @@ function BlogDetailsPage() {
                       <h1 className="mb-3 bread">{details?.name}</h1>
                       <p className="breadcrumbs">
                         <span className="mr-2">
-                          <a href="index.html">
+                          <a href=""
+                            onClick={() => {
+                              navigate('/')
+                            }}>
+
                             Home <i className="ion-ios-arrow-forward"></i>
                           </a>
                         </span>
                         <span className="mr-2">
-                          <a href="blog.html">
+                          <a href=""
+                            onClick={() => {
+                              navigate(`/${urlPrefix}/`)
+                            }}>
                             {urlPrefix} <i className="ion-ios-arrow-forward"></i>
                           </a>
                         </span>
@@ -98,7 +112,7 @@ function BlogDetailsPage() {
                   </div>
                 </div>
               </div>
-              <div className="ftco-section">
+              <div className="ftco-section" style={{ backgroundColor: "#1a1b1e" }}>
                 <div className="container">
                   <div className="row justify-content-center">
                     <div className="col-lg-8 ftco-animate pt-3">
@@ -109,6 +123,7 @@ function BlogDetailsPage() {
                             src={BASEURL + details?.file}
                             alt=""
                             className="img-fluid"
+                            style={imgStyles}
                           />
                         </p>
                       )}
@@ -116,7 +131,7 @@ function BlogDetailsPage() {
                         <>
                           {details?.subheadings.map((subheading, index) => {
                             return (
-                              <div key={index}>
+                              <div key={index} style={{ marginTop: "5rem" }}>
                                 <h2 className="my-3">{subheading?.tittle}</h2>
                                 {subheading?.file && (
                                   <p className="d-flex justify-content-center p-5">
@@ -124,6 +139,7 @@ function BlogDetailsPage() {
                                       src={BASEURL + subheading?.file}
                                       alt=""
                                       className="img-fluid"
+                                      style={imgStyles}
                                     />
                                   </p>
                                 )}
@@ -262,7 +278,7 @@ function BlogDetailsPage() {
                             )}
                           </>
                         )}
-                        <div className="comment-form-wrap pt-5">
+                        <div className="comment-form-wrap py-5">
                           <h3 className="mb-5">Leave a comment</h3>
                           <Formik
                             initialValues={{

@@ -57,12 +57,12 @@ function ListPage() {
                     {listData?.results?.data?.map((listItem, index) => {
                       return (
                         <div
-                          className="col-md-4 d-flex ftco-animate"
+                          className="col-md-6 col-lg-4 d-flex ftco-animate"
                           key={index}
                           onClick={() => handleDetailPageNavigation(navigate, pathPrefix, listItem)}
                         >
                           <div
-                            className="blog-entry justify-content-end"
+                            className="blog-entry listPageBlog justify-content-end"
                             style={{ width: "100%" }}
                           >
                             <a
@@ -73,7 +73,7 @@ function ListPage() {
                                   : "url(/images/image_1.jpg)",
                               }}
                             ></a>
-                            <div className="text mt-3 ml-5 float-right d-block">
+                            <div className="text mt-3 d-block">
                               <div className="d-flex align-items-center mb-3 meta">
                                 <p className="mb-0">
                                   <span className="mr-2">

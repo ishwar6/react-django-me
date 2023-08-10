@@ -7,7 +7,7 @@ function Layout({ children }) {
   const homeData = useSelector((state) => state?.homeData?.homeData?.results);
   return (
     <>
-      <Header sections={homeData?.sections} navTitle={homeData?.nav_name} />
+      <Header sections={homeData?.sections} navTitle={homeData?.nav_name} socialLinks={homeData?.social_media_links} />
       {children}
       <Footer
         sections={homeData?.sections}

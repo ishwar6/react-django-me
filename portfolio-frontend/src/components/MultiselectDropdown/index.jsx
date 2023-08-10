@@ -132,7 +132,7 @@ export default function MultiSelectDropdown({ selected, tags }) {
                 </div> :
                 <a onClick={() => {
                     setShowFilter(true);
-                }} className="btn m-1 btn-primary py-3 px-5">
+                }} className="btn btn-primary p-3" style={{marginLeft:"5rem"}}>
                     + Add Filter
                 </a>}
         </>

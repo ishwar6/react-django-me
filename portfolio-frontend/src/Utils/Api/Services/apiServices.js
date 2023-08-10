@@ -41,6 +41,15 @@ export const getListsData = (dispatch, navigate, location, listData, setListData
       }
     }
     axiosClient
+    .get("/footer")
+    .then((res) => {
+      dispatch(setHomePageData(res.data));
+    })
+    .catch((err) => {
+      console.log(err)
+      navigate('/error/404');
+    });
+    axiosClient
       .get(url)
       .then((res) => {
         if (listData) {
@@ -70,6 +79,15 @@ export const getListsData = (dispatch, navigate, location, listData, setListData
 export const getDetailsData = (dispatch, navigate, params, setDetails, setMetaData) => {
   try {
     dispatch(setPageLoading(true));
+    axiosClient
+    .get("/footer")
+    .then((res) => {
+      dispatch(setHomePageData(res.data));
+    })
+    .catch((err) => {
+      console.log(err)
+      navigate('/error/404');
+    });
     axiosClient
       .get(params)
       .then((res) => {

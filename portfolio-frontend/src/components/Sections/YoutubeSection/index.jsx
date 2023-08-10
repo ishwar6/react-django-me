@@ -28,7 +28,7 @@ function YoutubeSection({ youtubeData }) {
                           width="100%"
                           height="350"
                           src={link.link}
-                          style={{border:"none"}}
+                          style={{ border: "none" }}
                           title="YouTube video player"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
@@ -46,6 +46,7 @@ function YoutubeSection({ youtubeData }) {
                 })}
               </div>
               <a
+                target="blank"
                 href={youtubeData?.youtube_channel_link}
                 style={{
                   display: "flex",
