@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from web_portal.views import PortfolioView, BlogCommentsCreateView, BlogsGetView, ProjectsGetView,ContactMeCreateView
+from web_portal.views import PortfolioView, BlogCommentsCreateView, BlogsGetView, ProjectsGetView,ContactMeCreateView, FooterView
 from web_portal.sitemaps import BlogSitemap, ProjectsSitemap
 
 from django.contrib.sitemaps.views import sitemap
@@ -32,6 +32,7 @@ sitemaps = {
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/home', PortfolioView.as_view(), name='home-page'),
+    path('api/footer', FooterView.as_view(), name='footer-header'),
     path('api/projects/<slug:slug>/', ProjectsGetView.as_view(), name='projects'),
     path('api/projects/', ProjectsGetView.as_view(), name='projects'),
     path('api/contact-me/', ContactMeCreateView.as_view(), name='contact-me'),

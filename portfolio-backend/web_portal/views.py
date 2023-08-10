@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Navbar, BlogComments, Projects, MyBlogSection, MetaDetails, BlogDescription, ProjectDescription
 from .serializers import (PortfolioSerializer, BlogCommentsSerializer,MyBlogSection, ContactMeSerializer,ProjectsSerializer,
-                           MyBlogSectionSerializer, SingleBlogSectionSerializer)
+                           MyBlogSectionSerializer, SingleBlogSectionSerializer, FooterSerializer)
 from .utils import send_email
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -18,6 +18,47 @@ from django.db.models import Q
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class FooterView(APIView):
+    """
+        View to retrieve footer data.
+
+        GET request:
+            - Fetch and return the serialized representation of the footer data.
+
+        Example:
+            GET /
+    """
+    def get(self, request):
+        start_time = time.time()
+        navbar_instance = Navbar.objects.first()
+        # Serialize the portfolio data using the PortfolioSerializer
+        serializer = FooterSerializer(navbar_instance)
+        response_data = serializer.data
+        data = {
+            "results": response_data
+        }
+        response_time = time.time() - start_time
+        response_times = f"{response_time:.6f} seconds"
+        meta_details = MetaDetails.objects.first()
+        title = "Header & Footer"
+        description = ''
+
+        meta_data = {
+            "api": "api/footer/", 
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "success",  
+            "response_time": response_times,
+            "title" : title,
+            "description" : description 
+        }
+
+        data["meta"] = meta_data
+        return Response(data, status=status.HTTP_200_OK)
+
+
+
 class BlogsGetView(APIView):
     """
         View to retrieve blog section data.

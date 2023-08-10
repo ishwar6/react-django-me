@@ -363,6 +363,7 @@ class SocialMediaLinksForm(forms.ModelForm):
             'linkedin': r'^https?:\/\/(?:www\.)?linkedin\.com\/(?:[a-zA-Z]{2}\/)?(?:in\/)?[a-zA-Z0-9_-]+(?:\/|$)',
             'github': r'^https?:\/\/(?:www\.)?github\.com\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)?\/?$',
             'facebook': r'^https?:\/\/(?:www\.)?facebook\.com\/(?:[a-zA-Z0-9_.-]+\/)?(?:pages\/)?[a-zA-Z0-9_.-]+\/?$',
+            'leetcode': r'^https?:\/\/(?:www\.)?leetcode\.com\/[a-zA-Z0-9_]+\/?$',
         }
 
 
@@ -373,6 +374,9 @@ class SocialMediaLinksForm(forms.ModelForm):
 
     def clean_instagram(self):
         return self.validate_social_media_link(self.cleaned_data.get('instagram'), 'instagram')
+
+    def clean_leetcode(self):
+        return self.validate_social_media_link(self.cleaned_data.get('leetcode'), 'leetcode')
 
     def clean_twitter(self):
         return self.validate_social_media_link(self.cleaned_data.get('twitter'), 'twitter')

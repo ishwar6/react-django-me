@@ -83,7 +83,7 @@ class NavbarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Navbar
         fields = ["home", "about", "education", "experience", "services", "skills", "projects", "my_blog", "contact", "youtube", 
-                  "social_media", "hire_me"]
+                  "social_media", "hire_me", "youtube_icon", "leetcode_icon", "linkedin_icon", "github_icon"]
 
 
 class HomeSectionSerializer(serializers.ModelSerializer):
@@ -756,3 +756,32 @@ class SingleBlogSectionSerializer(serializers.ModelSerializer):
     def get_about(self, obj):
         data = AboutSection.objects.first()
         return AboutBlogSerializer(data).data
+    
+
+class FooterSerializer(serializers.ModelSerializer):
+    about = serializers.SerializerMethodField()
+    sections = serializers.SerializerMethodField()
+    social_media_links = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Navbar
+        fields = ["nav_name","sections", "about", "social_media_links"]
+    
+    def get_about(self, obj):
+        about_status = obj.about
+        if about_status:
+            home_section = AboutSection.objects.first()
+            return AboutSectionSerializer(home_section).data
+        return False
+
+    def get_sections(self, navbar):
+        return NavbarSerializer(navbar).data
+
+    def get_social_media_links(self, navbar):
+        social_media_status = navbar.social_media
+        if social_media_status:
+            home_section = SocialMediaLinks.objects.first()
+            return SocialMediaLinksSerializer(home_section).data
+        return False
+   
+

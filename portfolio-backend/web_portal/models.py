@@ -135,6 +135,10 @@ class Navbar(BaseModelMixin):
     youtube = models.BooleanField(default=False)
     social_media = models.BooleanField(default=False)
     hire_me = models.BooleanField(default=False)
+    youtube_icon = models.BooleanField(default=False)
+    leetcode_icon = models.BooleanField(default=False)
+    linkedin_icon = models.BooleanField(default=False)
+    github_icon = models.BooleanField(default=False)
 
     objects = SingleObjectManager()
 
@@ -1075,6 +1079,7 @@ class SocialMediaLinks(BaseModelMixin):
     linkedin = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
     github = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
     facebook = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    leetcode = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
 
     objects = SingleObjectManager()
 
