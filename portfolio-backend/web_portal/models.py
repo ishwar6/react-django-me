@@ -632,7 +632,7 @@ class Projects(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
-                                 - #h# : To add onle line gap.\n
+                                 - #h# : To start from a new line.\n
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -716,7 +716,7 @@ class ProjectSubheading(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
-                                 - #h# : To add onle line gap.\n.
+                                 - #h# : To start from a new line.\n.
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -866,7 +866,7 @@ class MyBlogSection(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
-                                 - #h# : To add onle line gap.\n.
+                                 - #h# : To start from a new line.\n.
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -964,7 +964,7 @@ class MyBlogSubheading(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
-                                 - #h# : To add onle line gap.\n.
+                                 - #h# : To start from a new line.\n.
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
