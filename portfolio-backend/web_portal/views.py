@@ -197,7 +197,7 @@ class BlogsGetView(APIView):
             # Build the filter query for each tag and chain them using AND operator (&)
             for tag_name in tag_list:
                 queryset_id = queryset.filter(tags__name__iexact=tag_name).values_list('id', flat=True)
-                obj_list.add(queryset_id)
+                obj_list.update(queryset_id)
             obj_list = list(obj_list)
             queryset = MyBlogSection.objects.filter(id__in = obj_list)
 
