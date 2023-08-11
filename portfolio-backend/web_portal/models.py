@@ -1129,7 +1129,7 @@ class ContactMe(BaseModelMixin):
     """
     name = models.CharField(max_length=255, null=False, blank=False)
     message = models.TextField(max_length=1024, null=False, blank=False, validators=[MaxLengthValidator(1024)], 
-                               help_text="Maximum length is 500 characters.")
+                               help_text="Maximum length is 1024 characters.")
     subject = models.TextField(max_length=100, null=False, blank=False)
     email = email = models.EmailField(
         null=False,
