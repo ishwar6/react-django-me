@@ -38,9 +38,8 @@ function ListPage() {
             <>
               <div className="ftco_section" id="my_blog_section">
                 <div className="container">
-                  <div className="row justify-content-center mb-5 pb-5">
+                  <div className="row justify-content-center">
                     <div className="col-md-7 heading_section text-center ftco-animate">
-                      <h1 className="big big-2">{pathPrefix}</h1>
                       <h2 className="mb-4">{`My ${pathPrefix}`}</h2>
                     </div>
                   </div>
@@ -62,7 +61,7 @@ function ListPage() {
                           onClick={() => handleDetailPageNavigation(navigate, pathPrefix, listItem)}
                         >
                           <div
-                            className="blog-entry listPageBlog justify-content-end"
+                            className="blog-entry justify-content-end"
                             style={{ width: "100%" }}
                           >
                             <a

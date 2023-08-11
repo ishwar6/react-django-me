@@ -21,19 +21,18 @@ function YoutubeSection({ youtubeData }) {
                   return (
                     <div className="col-md-6 col-lg-4 d-flex ftco-animate" key={index}>
                       <div
-                        className="blog-entry justify-content-end"
-                        style={{ width: "100%" }}
+                        className="blog-entry d-flex flex-column"
                       >
                         <iframe
-                          width="100%"
-                          height="350"
+                          width="80%"
+                          height="200"
                           src={link.link}
-                          style={{ border: "none" }}
+                          style={{ border: "none",margin:"0 auto" }}
                           title="YouTube video player"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                         ></iframe>
-                        <div className="text mt-3 float-right d-block">
+                        <div className="text mt-3 d-block">
                           <div className="d-flex align-items-center mb-3 meta"></div>
                           <h3 className="heading">
                             <a>{link?.title}</a>

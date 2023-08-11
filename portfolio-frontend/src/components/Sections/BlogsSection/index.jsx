@@ -44,7 +44,7 @@ function BlogsSection({ blogsData }) {
                               : "url(/images/image_1.jpg)",
                           }}
                         ></a>
-                        <div className="text mt-3 float-right d-block">
+                        <div className="text mt-3 d-block">
                           <div className="d-flex align-items-center mb-3 meta">
                             <p className="mb-0">
                               <span className="mr-2">

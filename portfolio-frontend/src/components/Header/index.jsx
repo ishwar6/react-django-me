@@ -32,10 +32,10 @@ function Header({ sections, navTitle, socialLinks }) {
       className="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target"
       id="ftco-navbar"
     >
-      <div className="container">
-        <div className="d-flex flex-column">
+      <div className="container py-2">
+        <div className="d-flex flex-column flex-xl-row">
         {navTitle !== "" && <a className="navbar-brand p-0">{navTitle}</a>}
-        <ul className="ftco-footer-social list-unstyled float-md-left float-lft m-0 pt-1 pb-4 pb-lg-0 navSocialIconsOne">
+        <ul className="ftco-footer-social list-unstyled float-md-left float-lft m-0 pb-4 pb-lg-0 navSocialIconsOne">
             {socialLinks?.leetcode && sections?.leetcode_icon && (
               <li className="ftco-animate">
                 <a target="blank" href={socialLinks?.leetcode} className="d-flex justify-content-center align-items-center" style={iconStyles}>
