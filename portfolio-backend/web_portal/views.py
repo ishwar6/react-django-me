@@ -360,7 +360,7 @@ class BlogCommentsCreateView(APIView):
             logger.info("Info message : Data fetched successfully.")
             return Response(data, status=status.HTTP_200_OK)
         logger.error("Error message: Blog id is invalid.")
-        return Response({"Error":"Blog id is missing"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":"Blog id is missing"}, status=status.HTTP_400_BAD_REQUEST)
     
 
     def post(self, request, *args, **kwargs):
@@ -380,6 +380,13 @@ class BlogCommentsCreateView(APIView):
 
             logger.info("Info message : comment created successfully.")
             return Response({"Message":"commented successfully!"}, status=status.HTTP_201_CREATED)
+        
+        serializer_errors = serializer.errors
+        if serializer_errors:
+            first_error_field = list(serializer_errors.keys())[0]
+            first_error_message = serializer_errors[first_error_field][0]
+            error_data = {"error": first_error_message}
+            return Response(error_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -470,8 +477,17 @@ class ContactMeCreateView(APIView):
                 instance.save()
 
             return Response({"Message":"Sent successfully!"}, status=status.HTTP_201_CREATED)
+        
+        serializer_errors = serializer.errors
+        if serializer_errors:
+            first_error_field = list(serializer_errors.keys())[0]
+            first_error_message = serializer_errors[first_error_field][0]
+            error_data = {"error": first_error_message}
+            return Response(error_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+
 class ProjectsGetView(APIView):
     """
         View to retrieve project data.

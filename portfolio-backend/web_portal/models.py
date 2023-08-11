@@ -1026,8 +1026,8 @@ class BlogComments(BaseModelMixin):
             The `save` method of the `BaseModelMixin` is inherited to ensure only one object of `BlogComments` is allowed.
     """
     name = models.CharField(max_length=100, null=False, blank=False, help_text="Maximum length is 100 characters.")
-    message = models.TextField(max_length=500, null=False, blank=False, validators=[MaxLengthValidator(500)], 
-                               help_text="Maximum length is 500 characters.")
+    message = models.TextField(max_length=1024, null=False, blank=False, validators=[MaxLengthValidator(500)], 
+                               help_text="Maximum length is 1024 characters.")
     email = email = models.EmailField(
         null=False,
         blank=False,
