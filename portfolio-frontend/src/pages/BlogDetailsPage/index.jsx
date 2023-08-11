@@ -19,7 +19,7 @@ import Layout from "../../components/Layout";
 import { Helmet } from "react-helmet";
 
 export const descriptionStyles = {
-  fontFamily: "Inter, sans-serif;",
+  fontFamily: "Inter, sans-serif",
   fontSize: "1.25rem",
   fontWeight: 300,
   lineHeight: 2,

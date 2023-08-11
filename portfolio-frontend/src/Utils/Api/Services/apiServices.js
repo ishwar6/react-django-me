@@ -164,7 +164,7 @@ export const sendMessage = (values, setSubmitting, resetForm) => {
       .catch((err) => {
         console.log(err);
         setSubmitting(false);
-        toast.error("Could not send message.");
+        toast.error(err.response.data.error);
       });
   } catch (error) {
     console.log(error);
@@ -192,7 +192,7 @@ export const PostComment = (values, setSubmitting, resetForm) => {
       .catch((err) => {
         console.log(err);
         setSubmitting(false);
-        toast.error("Could not send comment.");
+        toast.error(err.response.data.error);
       });
   } catch (error) {
     console.log(error);
