@@ -2,6 +2,7 @@ import React from "react";
 import { BASEURL } from "../../../Utils/Api/axiosClient";
 import moment from "moment/moment";
 import { useNavigate } from "react-router-dom";
+import parse from 'html-react-parser';
 
 function BlogsSection({ blogsData }) {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function BlogsSection({ blogsData }) {
                   <h1 className="big big-2">Blogs</h1>
                   <h2 className="mb-4">My Blogs</h2>
                   {blogsData?.description !== "" && (
-                    <p>{blogsData?.description}</p>
+                    <p>{parse(blogsData?.description)}</p>
                   )}
                 </div>
               </div>
@@ -63,7 +64,7 @@ function BlogsSection({ blogsData }) {
                           <h3 className="heading">
                             <a>{blog?.name}</a>
                           </h3>
-                          <p className="description">{blog?.description}</p>
+                          <p className="description">{parse(blog?.description)}</p>
                         </div>
                       </div>
                     </div>

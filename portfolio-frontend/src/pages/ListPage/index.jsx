@@ -9,6 +9,7 @@ import MultiSelectDropdown from "../../components/MultiselectDropdown";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Layout from "../../components/Layout";
+import parse from 'html-react-parser';
 import { Helmet } from "react-helmet";
 
 function ListPage() {
@@ -93,7 +94,7 @@ function ListPage() {
                               <h3 className="heading">
                                 <a>{listItem?.name}</a>
                               </h3>
-                              <p className="description">{listItem?.description}</p>
+                              <p className="description">{parse(listItem?.description)}</p>
                             </div>
                           </div>
                         </div>

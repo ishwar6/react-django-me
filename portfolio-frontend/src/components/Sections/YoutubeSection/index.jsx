@@ -1,4 +1,5 @@
 import React from "react";
+import parse from 'html-react-parser';
 
 function YoutubeSection({ youtubeData }) {
   return (
@@ -12,7 +13,7 @@ function YoutubeSection({ youtubeData }) {
                   <h1 className="big big-2">Youtube</h1>
                   <h2 className="mb-4">My Videos</h2>
                   {youtubeData?.description !== "" && (
-                    <p>{youtubeData?.description}</p>
+                    <p>{parse(youtubeData?.description)}</p>
                   )}
                 </div>
               </div>
@@ -37,7 +38,7 @@ function YoutubeSection({ youtubeData }) {
                           <h3 className="heading">
                             <a>{link?.title}</a>
                           </h3>
-                          <p className="description">{link?.description}</p>
+                          <p className="description">{parse(link?.description)}</p>
                         </div>
                       </div>
                     </div>

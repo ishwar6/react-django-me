@@ -1,6 +1,7 @@
 import React from "react";
 import { BASEURL } from "../../../Utils/Api/axiosClient";
 import { useNavigate } from "react-router-dom";
+import parse from 'html-react-parser';
 
 function ProjectsSection({ projectsData }) {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function ProjectsSection({ projectsData }) {
                 <h1 className="big big-2">Projects</h1>
                 <h2 className="mb-4">My Projects</h2>
                 {projectsData?.description !== "" && (
-                  <p>{projectsData?.description}</p>
+                  <p>{parse(projectsData?.description)}</p>
                 )}
               </div>
             </div>
