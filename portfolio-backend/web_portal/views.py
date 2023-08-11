@@ -386,7 +386,7 @@ class BlogCommentsCreateView(APIView):
             first_error_field = list(serializer_errors.keys())[0]
             first_error_message = serializer_errors[first_error_field][0]
             error_data = {"error": first_error_message}
-            return Response(error_data)
+            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -483,7 +483,7 @@ class ContactMeCreateView(APIView):
             first_error_field = list(serializer_errors.keys())[0]
             first_error_message = serializer_errors[first_error_field][0]
             error_data = {"error": first_error_message}
-            return Response(error_data)
+            return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
