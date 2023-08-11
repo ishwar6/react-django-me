@@ -12,7 +12,7 @@ function ProjectsSection({ projectsData }) {
             <div className="row justify-content-center pb-5">
               <div className="col-md-12 heading_section text-center ftco-animate">
                 <h1 className="big big-2">Projects</h1>
-                <h2 className="mb-4">Our Projects</h2>
+                <h2 className="mb-4">My Projects</h2>
                 {projectsData?.description !== "" && (
                   <p>{projectsData?.description}</p>
                 )}
