@@ -5,14 +5,14 @@ function Footer({ sections, aboutData, socialLinks }) {
         <div className="row mb-5 justify-content-around">
           <div className="col-md-4">
             <div className="ftco-footer-widget mb-4">
-              {aboutData?.description !== "" && (
+              {aboutData && aboutData?.description !== "" && (
                 <>
                   <h2 className="ftco-heading-2">About</h2>
                   <p>{aboutData?.description}</p>
                 </>
               )}
               {sections?.social_media && (
-                <ul className="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                <ul className="ftco-footer-social list-unstyled mt-5" style={aboutData ? {} : { display: "flex", justifyContent: "center" }}>
                   {socialLinks?.twitter && (
                     <li className="ftco-animate">
                       <a target="blank" href={socialLinks?.twitter}>
@@ -60,38 +60,40 @@ function Footer({ sections, aboutData, socialLinks }) {
               )}
             </div>
           </div>
-
-          <div className="col-md-4">
-            <div className="ftco-footer-widget mb-4">
-              <h2 className="ftco-heading-2">Have a Questions?</h2>
-              <div className="block-23 mb-3">
-                <ul>
-                  {aboutData?.address !== "" && (
-                    <li>
-                      <span className="icon icon-map-marker"></span>
-                      <span className="text">{aboutData?.address}</span>
-                    </li>
-                  )}
-                  {aboutData?.phone !== "" && (
-                    <li>
-                      <a href="">
-                        <span className="icon icon-phone"></span>
-                        <span className="text">{aboutData?.phone}</span>
-                      </a>
-                    </li>
-                  )}
-                  {aboutData?.email !== "" && (
-                    <li>
-                      <a href={`mailto:${aboutData?.email}`}>
-                        <span className="icon icon-envelope"></span>
-                        <span className="text">{aboutData?.email}</span>
-                      </a>
-                    </li>
-                  )}
-                </ul>
+          {
+            aboutData &&
+            <div className="col-md-4">
+              <div className="ftco-footer-widget mb-4">
+                <h2 className="ftco-heading-2">Have a Questions?</h2>
+                <div className="block-23 mb-3">
+                  <ul>
+                    {aboutData?.address !== "" && (
+                      <li>
+                        <span className="icon icon-map-marker"></span>
+                        <span className="text">{aboutData?.address}</span>
+                      </li>
+                    )}
+                    {aboutData?.phone !== "" && (
+                      <li>
+                        <a href="">
+                          <span className="icon icon-phone"></span>
+                          <span className="text">{aboutData?.phone}</span>
+                        </a>
+                      </li>
+                    )}
+                    {aboutData?.email !== "" && (
+                      <li>
+                        <a href={`mailto:${aboutData?.email}`}>
+                          <span className="icon icon-envelope"></span>
+                          <span className="text">{aboutData?.email}</span>
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
         <div className="row">
           <div className="col-md-12 text-center">

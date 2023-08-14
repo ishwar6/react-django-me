@@ -120,6 +120,42 @@ function Header({ sections, navTitle, socialLinks }) {
                 </a>
               </li>
             )}
+             {sections?.my_blog && (
+              <li className="nav-item">
+                <a
+                  onClick={() => {
+                    navigate("/blogs/");
+                    window.location.reload();
+                  }}
+                  className="nav-link"
+                >
+                  <span>My Blog</span>
+                </a>
+              </li>
+            )}
+             {sections?.projects && (
+              <li className="nav-item">
+                <a
+                  onClick={() => {
+                    navigate("/projects/");
+                    window.location.reload();
+                  }}
+                  className="nav-link"
+                >
+                  <span>Projects</span>
+                </a>
+              </li>
+            )}
+            {sections?.youtube && (
+              <li className="nav-item">
+                <a
+                  onClick={() => handleSectionNavigation(location, navigate, "youtube_section")}
+                  className="nav-link"
+                >
+                  <span>Youtube</span>
+                </a>
+              </li>
+            )}
             {sections?.about && (
               <li className="nav-item">
                 <a
@@ -169,43 +205,6 @@ function Header({ sections, navTitle, socialLinks }) {
                   className="nav-link"
                 >
                   <span>Skills</span>
-                </a>
-              </li>
-            )}
-
-            {sections?.projects && (
-              <li className="nav-item">
-                <a
-                  onClick={() => {
-                    navigate("/projects/");
-                    window.location.reload();
-                  }}
-                  className="nav-link"
-                >
-                  <span>Projects</span>
-                </a>
-              </li>
-            )}
-            {sections?.my_blog && (
-              <li className="nav-item">
-                <a
-                  onClick={() => {
-                    navigate("/blogs/");
-                    window.location.reload();
-                  }}
-                  className="nav-link"
-                >
-                  <span>My Blog</span>
-                </a>
-              </li>
-            )}
-            {sections?.youtube && (
-              <li className="nav-item">
-                <a
-                  onClick={() => handleSectionNavigation(location, navigate, "youtube_section")}
-                  className="nav-link"
-                >
-                  <span>Youtube</span>
                 </a>
               </li>
             )}

@@ -2,6 +2,7 @@ import React from "react";
 import { BASEURL } from "../../../Utils/Api/axiosClient";
 import { useNavigate } from "react-router-dom";
 import parse from 'html-react-parser';
+import moment from "moment/moment";
 
 function ProjectsSection({ projectsData }) {
   const navigate = useNavigate();
@@ -32,17 +33,39 @@ function ProjectsSection({ projectsData }) {
                     }}
                   >
                     <div
-                      className="project img ftco-animate d-flex justify-content-center align-items-center"
-                      style={{
-                        backgroundImage: `url(${BASEURL + project?.file})`,
-                      }}
+                      className="blog-entry justify-content-end"
+                      style={{ width: "100%" }}
                     >
-                      <div className="overlay"></div>
-                      <div className="text text-center p-4">
-                        <h3>
-                          <a href="">{project?.name}</a>
+                      <div
+                        className="project img ftco-animate d-flex justify-content-center align-items-center"
+                        style={{
+                          backgroundImage: project?.file
+                            ? `url(${BASEURL + project?.file})`
+                            : "url(/images/projectDummy.jpg)",
+                        }}
+                      >
+                        <div className="overlay"></div>
+                        <div className="text text-center p-4">
+                          <h3>
+                            <a href="">{project?.name}</a>
+                          </h3>
+                          <span>{project?.service}</span>
+                        </div>
+                      </div>
+                      <div className="text mt-3 d-block">
+                        <div className="d-flex align-items-center mb-3 meta">
+                          <p className="mb-0">
+                            <span className="mr-2">
+                              {moment(project.created_at).format(
+                                "MMMM DD, YYYY"
+                              )}
+                            </span>
+                          </p>
+                        </div>
+                        <h3 className="heading">
+                          <a>{project?.name}</a>
                         </h3>
-                        <span>{project?.service}</span>
+                        <p className="description">{parse(project?.description)}</p>
                       </div>
                     </div>
                   </div>

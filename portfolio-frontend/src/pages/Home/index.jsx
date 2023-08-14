@@ -41,6 +41,15 @@ function Home() {
               {homeData?.results?.sections?.home && (
                 <HomeSection slidesData={homeData?.results?.home_section} />
               )}
+              {homeData?.results?.sections?.my_blog && (
+                <BlogsSection blogsData={homeData?.results?.blogs_section} />
+              )}
+              {homeData?.results?.sections?.projects && (
+                <ProjectsSection projectsData={homeData?.results?.projects_section} />
+              )}
+              {homeData?.results?.sections?.youtube && (
+                <YoutubeSection youtubeData={homeData?.results?.youtube_videos_link} />
+              )}
               {homeData?.results?.sections?.about && (
                 <AboutSection aboutData={homeData?.results?.about_section} />
               )}
@@ -55,15 +64,6 @@ function Home() {
               )}
               {homeData?.results?.sections?.skills && (
                 <SkillsSection skillsData={homeData?.results?.skills_section} />
-              )}
-              {homeData?.results?.sections?.projects && (
-                <ProjectsSection projectsData={homeData?.results?.projects_section} />
-              )}
-              {homeData?.results?.sections?.my_blog && (
-                <BlogsSection blogsData={homeData?.results?.blogs_section} />
-              )}
-              {homeData?.results?.sections?.youtube && (
-                <YoutubeSection youtubeData={homeData?.results?.youtube_videos_link} />
               )}
               {homeData?.results?.sections?.hire_me && (
                 <AvailableToHireSection hireMeData={homeData?.results?.hire_me_section} />

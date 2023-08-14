@@ -12971,14 +12971,13 @@ h5,
 
 @media (min-width: 992px) {
   .margin-top {
-    margin-top: -70px;
     padding-top: 10em !important;
   }
 }
 
 .project {
   width: 100%;
-  height: 400px;
+  height: 200px;
   margin-bottom: 30px;
   position: relative;
   z-index: 0;
@@ -13171,15 +13170,22 @@ textarea.form-control {
 }
 
 .ftco_section {
-  padding: 7em 0;
+  padding: 5em 0;
   position: relative;
 }
 
 @media (max-width: 767.98px) {
   .ftco_section {
-    padding: 6em 0;
+    padding: 4em 0;
   }
 }
+
+@media (min-width: 517.98px) {
+  #skills_section {
+    padding: 4em 6em;
+  }
+}
+
 
 .ftco-no-pt {
   padding-top: 0 !important;
@@ -13498,7 +13504,7 @@ textarea.form-control {
 
 .block-20 {
   overflow: hidden;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
   position: relative;
