@@ -123,7 +123,7 @@ class Navbar(BaseModelMixin):
     """
     nav_name = models.CharField(max_length=50, null=False, blank=False)
     home = models.BooleanField(default=False)
-    about = models.BooleanField(default=False)
+    about = models.BooleanField(default=True)
     skills = models.BooleanField(default=False)
     services = models.BooleanField(default=False)
     experience = models.BooleanField(default=False)
@@ -207,7 +207,7 @@ class HomeSection(BaseModelMixin):
         help_text='To design the specific words please use "double quote".')
     sub_text = models.CharField(max_length=255, blank=True, null=True,
         help_text='To design the specific words please use "double quote".')
-    file = models.FileField(upload_to=unique_home_filename, blank=True, 
+    file = models.FileField(upload_to=unique_home_filename, blank=False, 
                             help_text="Please upload an image with a 3:2 aspect ratio, and only JPG and JPEG files are allowed.")
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)

@@ -470,7 +470,7 @@ class YouTubeSerializer(serializers.ModelSerializer):
 
         filtered_links = youtube_links_queryset.filter(
             Q(is_main=True) | Q(is_main=False)
-        ).order_by('-is_main', '-created_at')[:3]
+        ).order_by('-is_main', '-created_at')[:6]
 
         # Serialize the filtered queryset using YouTubeLinksSerializer
         return YouTubeLinksSerializer(filtered_links, many=True).data
@@ -627,7 +627,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
             data = BlogDescriptionSerializer(descript_data).data
             home_section = MyBlogSection.objects.filter(
                 Q(is_main=True) | Q(is_main=False)
-            ).order_by('-is_main', '-created_at')[:3]
+            ).order_by('-is_main', '-created_at')[:6]
             data["my_blog"] = MyBlogSectionSerializer(home_section, many=True).data
             return data
         return False
@@ -640,7 +640,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
             data = ProjectDescriptionSerializer(descript_data).data
             home_section = Projects.objects.filter(
                 Q(is_main=True) | Q(is_main=False)
-            ).order_by('-is_main', '-created_at')[:3]
+            ).order_by('-is_main', '-created_at')[:6]
             data["projects"] =  ProjectsSerializer(home_section, many=True).data
             return data
         return False
