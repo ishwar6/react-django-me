@@ -69,7 +69,7 @@ function Home() {
                 <AvailableToHireSection hireMeData={homeData?.results?.hire_me_section} />
               )}
               {homeData?.results?.sections?.contact && (
-                <ContactSection contactData={homeData?.results?.about_section} />
+                <ContactSection contactData={homeData?.results?.about_sectiion} />
               )}
             </>
           )}
