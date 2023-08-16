@@ -62,8 +62,8 @@ class ServiceSectionsForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class ServiceSectionsInline(admin.TabularInline):
@@ -148,8 +148,8 @@ class HomeSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class HomeSectionAdmin(admin.ModelAdmin):
@@ -169,8 +169,8 @@ class AboutSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class AboutSectionAdmin(admin.ModelAdmin):
@@ -192,8 +192,8 @@ class MyBlogSubheadingForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -208,8 +208,8 @@ class MyBlogSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 from django.utils.safestring import mark_safe
@@ -236,8 +236,8 @@ class ProjectSubheadingForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class ProjectsForm(forms.ModelForm):
@@ -249,8 +249,8 @@ class ProjectsForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file    
 
 class ProjectSubheadingInline(admin.TabularInline):
@@ -373,8 +373,8 @@ class HireMeSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class HireMeSectionAdmin(admin.ModelAdmin):

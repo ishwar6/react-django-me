@@ -75,7 +75,6 @@ class BlogsGetView(APIView):
             - If neither 'my_blog' nor 'recent' is provided, return all blogs serialized data.
 
         Example:
-            GET /blogs/?my_blog=1
             GET /blogs/?tag=AI
             GET /blogs/?recent=True
             GET /blogs/
@@ -303,8 +302,8 @@ class BlogCommentsCreateView(APIView):
             field for the corresponding MyBlogSection upon successful comment creation.
 
         Example:
-            GET /blog-comments/?my_blog=1
-            POST /blog-comments/
+            GET /blog-comments/<slug>
+            POST /blog-comments/<slug>
             {
                 "my_blog": 1,
                 "name": "John Doe",
@@ -369,7 +368,7 @@ class BlogCommentsCreateView(APIView):
             serializer.save()
 
             # Increment comment_count for the related MyBlogSection
-            my_blog_section_id = request.data.get('my_blog')
+            my_blog_section_id = kwargs.get('slug')
             if my_blog_section_id:
                 try:
                     my_blog_section = MyBlogSection.objects.get(slug=my_blog_section_id)

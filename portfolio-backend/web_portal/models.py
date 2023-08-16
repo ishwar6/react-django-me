@@ -188,7 +188,7 @@ class HomeSection(BaseModelMixin):
             main_text (CharField): The main text to be displayed in the home section.
             sub_text (CharField): The subtext to be displayed in the home section (optional).
             file (FileField): An optional file to be uploaded and displayed in the home section.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
 
         Methods:
             save(*args, **kwargs): Override the save method to process the main_text and sub_text
@@ -208,7 +208,7 @@ class HomeSection(BaseModelMixin):
     sub_text = models.CharField(max_length=255, blank=True, null=True,
         help_text='To design the specific words please use "double quote".')
     file = models.FileField(upload_to=unique_home_filename, blank=False, 
-                            help_text="Please upload an image with a 3:2 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)
 
@@ -325,7 +325,7 @@ class AboutSection(BaseModelMixin):
     resume = models.FileField(upload_to='resumes/', validators=[validate_file_extension],
         help_text="Only PDF and DOC files are allowed.",)
     file = models.FileField(upload_to='about/', blank=True, 
-                            help_text="Please upload an image with a 4:5 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
 
     objects = SingleObjectManager()
 
@@ -466,7 +466,7 @@ class ServiceSections(BaseModelMixin):
         Attributes:
             service (CharField): The name of the service.
             file (FileField): An optional file to be uploaded and associated with the service section.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             service_section (ForeignKey): A foreign key to link the service section to the Services model.
 
         Methods:
@@ -481,7 +481,7 @@ class ServiceSections(BaseModelMixin):
     """
     service = models.CharField(max_length=100, null=False, blank=False)
     file = models.FileField(upload_to=unique_filename, blank=True, 
-                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     service_section = models.ForeignKey(Services, related_name="service_sections",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -610,7 +610,7 @@ class Projects(BaseModelMixin):
             is_main (BooleanField): A boolean flag to indicate if the project is the main project.
                                     Default is False.
             file (FileField): An optional file to be uploaded and associated with the project.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
 
         Methods:
             __str__(): Return the string representation of the model instance.
@@ -642,7 +642,7 @@ class Projects(BaseModelMixin):
                          Note: 'file' is optional when including a Gist.""")
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
-                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     slug = models.SlugField(max_length=300, unique=True, null=True, blank=True, editable=False, 
                             help_text="Not editable field.")
     project_meta_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
@@ -695,7 +695,7 @@ class ProjectSubheading(BaseModelMixin):
             description (TextField): An optional description or details about the subheading.
                                     It can be a longer text field.
             file (FileField): An optional file to be uploaded and associated with the subheading.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             project (ForeignKey): A foreign key to link the subheading to the Projects model.
 
         Methods:
@@ -725,7 +725,7 @@ class ProjectSubheading(BaseModelMixin):
 
                          Note: 'file' is optional when including a Gist.""")
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
-                            help_text="Please upload an image with a 4:3 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     project = models.ForeignKey(Projects, related_name="projects_subheadings",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -838,7 +838,7 @@ class MyBlogSection(BaseModelMixin):
             is_main (BooleanField): A boolean flag to indicate if the blog is the main blog.
                                     Default is False.
             file (FileField): An optional file to be uploaded and associated with the blog.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             comment_count (BigIntegerField): The count of comments for the blog.
                                             It has a default value of 0.
 
@@ -876,7 +876,7 @@ class MyBlogSection(BaseModelMixin):
                          Note: 'file' is optional when including a Gist.""")
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     comment_count = models.BigIntegerField(default= 0)
     slug = models.SlugField(max_length=300, unique=True, null=True, blank=True, editable=False)
     blog_meta_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
@@ -943,7 +943,7 @@ class MyBlogSubheading(BaseModelMixin):
             description (TextField): An optional description or details about the subheading.
                                     It can be a longer text field.
             file (FileField): An optional file to be uploaded and associated with the subheading.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             my_blog (ForeignKey): A foreign key to link the subheading to the MyBlogSection model.
 
         Methods:
@@ -973,7 +973,7 @@ class MyBlogSubheading(BaseModelMixin):
 
                          Note: 'file' is optional when including a Gist.""")
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Please upload an image with a 4:3 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     my_blog = models.ForeignKey(MyBlogSection, related_name="MyBlog_subheadings",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -1180,7 +1180,7 @@ class HireMeSection(BaseModelMixin):
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Please upload an image with a 16:9 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
 
     
     objects = SingleObjectManager()

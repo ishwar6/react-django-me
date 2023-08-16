@@ -53,6 +53,7 @@ class BlogCommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogComments
         fields = '__all__'
+        ordering = ['-created_at']
 
 class NavbarSerializer(serializers.ModelSerializer):
     """
@@ -291,6 +292,7 @@ class ProjectSubheadingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectSubheading
         fields = '__all__'
+        ordering = ['-created_at']
 
 
 class ProjectDescriptionSerializer(serializers.ModelSerializer):
@@ -338,6 +340,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Projects
         fields = '__all__'
+        ordering = ['-created_at']
 
 
 class MyBlogSubheadingSerializer(serializers.ModelSerializer):
@@ -360,6 +363,7 @@ class MyBlogSubheadingSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyBlogSubheading
         fields = '__all__'
+        ordering = ['-created_at']
 
 
 class MyBlogSectionSerializer(serializers.ModelSerializer):
@@ -391,6 +395,7 @@ class MyBlogSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyBlogSection
         fields = '__all__'
+        ordering = ['-created_at']
 
 
 class BlogDescriptionSerializer(serializers.ModelSerializer):
