@@ -124,10 +124,10 @@ function ProjectDetailsPage() {
                       {details?.about && (
                         <div className="about-author d-flex p-4 bg-dark">
                           {details?.about?.file && (
-                            <div className="bio mr-5">
+                            <div className="bio mr-5 col-md-4">
                               <img
                                 src={BASEURL + details?.about?.file}
-                                alt="Image placeholder"
+                                alt={details?.about?.name}
                                 className="img-fluid mb-4"
                               />
                             </div>

@@ -68,7 +68,7 @@ function Home() {
               {homeData?.results?.sections?.hire_me && (
                 <AvailableToHireSection hireMeData={homeData?.results?.hire_me_section} />
               )}
-              {homeData?.results?.sections?.my_blog && (
+              {homeData?.results?.sections?.contact && (
                 <ContactSection contactData={homeData?.results?.about_section} />
               )}
             </>

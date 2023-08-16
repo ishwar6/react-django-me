@@ -12505,6 +12505,10 @@ h5,
   background: #fff;
 }
 
+.gist {
+  margin: 1.5rem 0;
+}
+
 .hero-wrap {
   width: 100%;
   height: 100%;
@@ -13075,7 +13079,7 @@ h5,
 
 @media (max-width: 767.98px) {
   .project .text {
-    opacity: 1;
+    opacity: 0;
   }
 
   .project .text span {

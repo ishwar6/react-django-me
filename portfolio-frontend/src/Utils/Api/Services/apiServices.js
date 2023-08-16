@@ -181,7 +181,7 @@ export const PostComment = (values, setSubmitting, resetForm) => {
     formData.append("my_blog", values.id);
     formData.append("message", values.message);
     axiosClient
-      .post("/blog-comments/", formData, {
+      .post(`/blog-comments/${values.id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
