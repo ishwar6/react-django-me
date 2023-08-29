@@ -4,13 +4,16 @@ from django.core.exceptions import ValidationError
 import re
 from PIL import Image
 from django.core.validators import URLValidator
+import logging
 
+logger = logging.getLogger(__name__)
 # Register your models here.
 from .models import (Projects, ProjectSubheading, MyBlogSubheading, MyBlogSection, Projects, HomeSection, Navbar, Skill, Services, 
                      ServiceSections, SkillSection, AboutSection, ProjectDescription, EducationSection, ExperienceSection, 
-                     ContactMe, BlogComments, YouTubeLinks, SocialMediaLinks, BlogDescription, HireMeSection, YouTube)
+                     ContactMe, BlogComments, YouTubeLinks, SocialMediaLinks, BlogDescription, HireMeSection, YouTube, MetaDetails)
 
 
+admin.site.register(MetaDetails)
 
 class SkillSectionInline(admin.TabularInline):
     """
@@ -59,19 +62,8 @@ class ServiceSectionsForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 1 - 0.01
-            max_valid_aspect_ratio = 1 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 1:1 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class ServiceSectionsInline(admin.TabularInline):
@@ -156,18 +148,8 @@ class HomeSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 3 / 2 - 0.01
-            max_valid_aspect_ratio = 3 / 2 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 3:2 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class HomeSectionAdmin(admin.ModelAdmin):
@@ -187,18 +169,8 @@ class AboutSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 4 / 5 - 0.01
-            max_valid_aspect_ratio = 4 / 5 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 4:5 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class AboutSectionAdmin(admin.ModelAdmin):
@@ -220,18 +192,8 @@ class MyBlogSubheadingForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 4 / 3 - 0.01
-            max_valid_aspect_ratio = 4 / 3 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 4:3 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -246,19 +208,8 @@ class MyBlogSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 1 - 0.01
-            max_valid_aspect_ratio = 1 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 1:1 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 from django.utils.safestring import mark_safe
@@ -270,7 +221,7 @@ class MyBlogSubheadingInline(admin.TabularInline):
 class MyBlogSectionAdmin(admin.ModelAdmin):
     inlines = [MyBlogSubheadingInline]
     form = MyBlogSectionForm 
-    list_display = ('id', "name", "service", "description", "is_main", "file", "comment_count",)
+    list_display = ('id', "name", "slug","service", "description", "is_main", "file", "comment_count",)
 
 admin.site.register(MyBlogSection, MyBlogSectionAdmin)
 
@@ -285,18 +236,8 @@ class ProjectSubheadingForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 4 / 3 - 0.01
-            max_valid_aspect_ratio = 4 / 3 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 4:3 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class ProjectsForm(forms.ModelForm):
@@ -308,19 +249,8 @@ class ProjectsForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 1 - 0.01
-            max_valid_aspect_ratio = 1 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 1:1 aspect ratio.")
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file    
 
 class ProjectSubheadingInline(admin.TabularInline):
@@ -331,7 +261,7 @@ class ProjectSubheadingInline(admin.TabularInline):
 class ProjectsAdmin(admin.ModelAdmin):
     inlines = [ProjectSubheadingInline]
     form = ProjectsForm 
-    list_display = ('id', "name", "service", "description", "is_main", "file",)
+    list_display = ('id', "name", "slug", "service", "description", "is_main", "file",)
     def clean(self, form):
         cleaned_data = super().clean()
 
@@ -360,6 +290,7 @@ class SocialMediaLinksForm(forms.ModelForm):
             'linkedin': r'^https?:\/\/(?:www\.)?linkedin\.com\/(?:[a-zA-Z]{2}\/)?(?:in\/)?[a-zA-Z0-9_-]+(?:\/|$)',
             'github': r'^https?:\/\/(?:www\.)?github\.com\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)?\/?$',
             'facebook': r'^https?:\/\/(?:www\.)?facebook\.com\/(?:[a-zA-Z0-9_.-]+\/)?(?:pages\/)?[a-zA-Z0-9_.-]+\/?$',
+            'leetcode': r'^https?:\/\/(?:www\.)?leetcode\.com\/[a-zA-Z0-9_]+\/?$',
         }
 
 
@@ -370,6 +301,9 @@ class SocialMediaLinksForm(forms.ModelForm):
 
     def clean_instagram(self):
         return self.validate_social_media_link(self.cleaned_data.get('instagram'), 'instagram')
+
+    def clean_leetcode(self):
+        return self.validate_social_media_link(self.cleaned_data.get('leetcode'), 'leetcode')
 
     def clean_twitter(self):
         return self.validate_social_media_link(self.cleaned_data.get('twitter'), 'twitter')
@@ -405,7 +339,9 @@ admin.site.register(ExperienceSection, ExperienceSectionAdmin)
 
 
 class NavbarAdmin(admin.ModelAdmin):
-    list_display = ('id', "nav_name", "home", "about", "skills", "services", "experience", "education", "projects", "my_blog", "contact", "receive_mail", "youtube", "social_media", "hire_me",)
+    list_display = ('id', "nav_name", "home", "skills", "services", "experience", "education", "projects", "my_blog", "contact", "receive_mail", "youtube", "social_media", "hire_me",)
+    exclude = ('about',)
+
 admin.site.register(Navbar, NavbarAdmin)
 
 
@@ -437,19 +373,8 @@ class HireMeSectionForm(forms.ModelForm):
         file = self.cleaned_data.get('file', False)
         if file:
             ext = file.name.split('.')[-1].lower()
-            if ext not in ['jpg', 'jpeg']:
-                raise forms.ValidationError("Only JPG and JPEG files are allowed.")
-            # Validate aspect ratio
-            img = Image.open(file)
-            width, height = img.size
-
-            aspect_ratio = width / height
-            min_valid_aspect_ratio = 16 / 9 - 0.01
-            max_valid_aspect_ratio = 16 / 9 + 0.01
-
-            if not (min_valid_aspect_ratio <= aspect_ratio <= max_valid_aspect_ratio):
-                raise forms.ValidationError("Invalid aspect ratio. Please upload an image with a 16:9 aspect ratio.")
-
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise forms.ValidationError("Only JPG, PNG and JPEG files are allowed.")
         return file
 
 class HireMeSectionAdmin(admin.ModelAdmin):

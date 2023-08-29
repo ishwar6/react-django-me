@@ -1,17 +1,24 @@
-from django.db import models
-
-from django.db import models
-from django.core.validators import EmailValidator
-from taggit.managers import TaggableManager
-from django.core.validators import RegexValidator
-import os
-import uuid
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+from django.core.validators import RegexValidator
+from taggit.managers import TaggableManager
+from django.utils.text import slugify
 from django.utils import timezone
-import re
 from .utils import send_email
+from django.db import models
+import uuid
+import os
+import re
+from .utils import generate_unique_6_length_character, generate_unique_slug_value
+from django.urls import reverse
 # Create your models here.
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+
 
 
 class BaseModelMixin(models.Model):
@@ -116,7 +123,7 @@ class Navbar(BaseModelMixin):
     """
     nav_name = models.CharField(max_length=50, null=False, blank=False)
     home = models.BooleanField(default=False)
-    about = models.BooleanField(default=False)
+    about = models.BooleanField(default=True)
     skills = models.BooleanField(default=False)
     services = models.BooleanField(default=False)
     experience = models.BooleanField(default=False)
@@ -128,6 +135,10 @@ class Navbar(BaseModelMixin):
     youtube = models.BooleanField(default=False)
     social_media = models.BooleanField(default=False)
     hire_me = models.BooleanField(default=False)
+    youtube_icon = models.BooleanField(default=False)
+    leetcode_icon = models.BooleanField(default=False)
+    linkedin_icon = models.BooleanField(default=False)
+    github_icon = models.BooleanField(default=False)
 
     objects = SingleObjectManager()
 
@@ -135,6 +146,25 @@ class Navbar(BaseModelMixin):
         if self.pk is None and Navbar.objects.exists():
             raise ValueError("Only one object is allowed.")
         super(Navbar, self).save(*args, **kwargs)
+
+
+
+
+class MetaDetails(BaseModelMixin):
+    home_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    home_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    blog_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    blog_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    project_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    project_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+
+    objects = SingleObjectManager()
+
+    def save(self, *args, **kwargs):
+        if self.pk is None and MetaDetails.objects.exists():
+            raise ValueError("Only one object is allowed.")
+        super(MetaDetails, self).save(*args, **kwargs)
+
 
 
 def unique_home_filename(instance, filename):
@@ -158,7 +188,7 @@ class HomeSection(BaseModelMixin):
             main_text (CharField): The main text to be displayed in the home section.
             sub_text (CharField): The subtext to be displayed in the home section (optional).
             file (FileField): An optional file to be uploaded and displayed in the home section.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
 
         Methods:
             save(*args, **kwargs): Override the save method to process the main_text and sub_text
@@ -177,8 +207,8 @@ class HomeSection(BaseModelMixin):
         help_text='To design the specific words please use "double quote".')
     sub_text = models.CharField(max_length=255, blank=True, null=True,
         help_text='To design the specific words please use "double quote".')
-    file = models.FileField(upload_to=unique_home_filename, blank=True, 
-                            help_text="Please upload an image with a 3:2 aspect ratio, and only JPG and JPEG files are allowed.")
+    file = models.FileField(upload_to=unique_home_filename, blank=False, 
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)
 
@@ -295,7 +325,7 @@ class AboutSection(BaseModelMixin):
     resume = models.FileField(upload_to='resumes/', validators=[validate_file_extension],
         help_text="Only PDF and DOC files are allowed.",)
     file = models.FileField(upload_to='about/', blank=True, 
-                            help_text="Please upload an image with a 4:5 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
 
     objects = SingleObjectManager()
 
@@ -436,7 +466,7 @@ class ServiceSections(BaseModelMixin):
         Attributes:
             service (CharField): The name of the service.
             file (FileField): An optional file to be uploaded and associated with the service section.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             service_section (ForeignKey): A foreign key to link the service section to the Services model.
 
         Methods:
@@ -451,7 +481,7 @@ class ServiceSections(BaseModelMixin):
     """
     service = models.CharField(max_length=100, null=False, blank=False)
     file = models.FileField(upload_to=unique_filename, blank=True, 
-                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     service_section = models.ForeignKey(Services, related_name="service_sections",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -550,6 +580,9 @@ def replace_custom_symbols_with_elements(text):
     # For italic text
     text = re.sub(r'#i#(.*?)#i#', r'<em>\1</em>', text)
 
+    # For new line
+    text = re.sub(r'#h#', r'<hr/>', text)
+
     # For code commands
     text = re.sub(r'#pre#(.*?)#pre#', r'<pre><code>\1</code></pre>', text)
 
@@ -577,7 +610,7 @@ class Projects(BaseModelMixin):
             is_main (BooleanField): A boolean flag to indicate if the project is the main project.
                                     Default is False.
             file (FileField): An optional file to be uploaded and associated with the project.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
 
         Methods:
             __str__(): Return the string representation of the model instance.
@@ -599,6 +632,7 @@ class Projects(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #h# : To start from a new line.\n
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -608,12 +642,38 @@ class Projects(BaseModelMixin):
                          Note: 'file' is optional when including a Gist.""")
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
-                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
+    slug = models.SlugField(max_length=300, unique=True, null=True, blank=True, editable=False, 
+                            help_text="Not editable field.")
+    project_meta_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    project_meta_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    
+
+    def get_absolute_url(self):
+        return reverse('projects', args=[str(self.slug)])
+
+    def generate_slug(self):
+        queryset = Projects.objects.filter(slug__isnull = True)
+        for obj in queryset:
+            name = obj.name
+            obj.slug = generate_unique_slug_value(name)
+            counter = 1
+            while Projects.objects.filter(slug=obj.slug).exists():
+                obj.slug = f"{obj.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
+            obj.save()
+
     
     def save(self, *args, **kwargs):
         string = self.description
-        
         self.description = replace_custom_symbols_with_elements(string)
+        
+        if not self.slug:
+            self.slug = slugify(self.name)
+            counter = 1
+            while Projects.objects.filter(slug=self.slug).exists():
+                self.slug = f"{self.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
 
         super(Projects, self).save(*args, **kwargs)
     
@@ -635,7 +695,7 @@ class ProjectSubheading(BaseModelMixin):
             description (TextField): An optional description or details about the subheading.
                                     It can be a longer text field.
             file (FileField): An optional file to be uploaded and associated with the subheading.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             project (ForeignKey): A foreign key to link the subheading to the Projects model.
 
         Methods:
@@ -656,6 +716,7 @@ class ProjectSubheading(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #h# : To start from a new line.\n.
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -664,7 +725,7 @@ class ProjectSubheading(BaseModelMixin):
 
                          Note: 'file' is optional when including a Gist.""")
     file = models.FileField(upload_to=unique_project_filename, blank=True, 
-                            help_text="Please upload an image with a 4:3 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     project = models.ForeignKey(Projects, related_name="projects_subheadings",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -777,7 +838,7 @@ class MyBlogSection(BaseModelMixin):
             is_main (BooleanField): A boolean flag to indicate if the blog is the main blog.
                                     Default is False.
             file (FileField): An optional file to be uploaded and associated with the blog.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             comment_count (BigIntegerField): The count of comments for the blog.
                                             It has a default value of 0.
 
@@ -805,6 +866,7 @@ class MyBlogSection(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #h# : To start from a new line.\n.
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -814,8 +876,11 @@ class MyBlogSection(BaseModelMixin):
                          Note: 'file' is optional when including a Gist.""")
     is_main = models.BooleanField(default=False)
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Please upload an image with a 1:1 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     comment_count = models.BigIntegerField(default= 0)
+    slug = models.SlugField(max_length=300, unique=True, null=True, blank=True, editable=False)
+    blog_meta_title = models.CharField(max_length=100, null=True, blank=True, help_text="Maximum length is 100 characters.")
+    blog_meta_description = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
 
     tags = TaggableManager()
     
@@ -829,12 +894,33 @@ class MyBlogSection(BaseModelMixin):
             # Update the comment_count for the blog
             blog.comment_count = comment_count
             blog.save()
-        
 
+    def generate_slug(self):
+        queryset = MyBlogSection.objects.filter(slug__isnull = True)
+        for obj in queryset:
+            name = obj.name
+            obj.slug = generate_unique_slug_value(name)
+            counter = 1
+            while MyBlogSection.objects.filter(slug=obj.slug).exists():
+                obj.slug = f"{obj.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
+            obj.save()
+        
+    
+    def get_absolute_url(self):
+        return reverse('my-blogs', args=[str(self.slug)])
+    
     def save(self, *args, **kwargs):
         string = self.description
-        
         self.description = replace_custom_symbols_with_elements(string)
+
+    
+        if not self.slug:
+            self.slug = slugify(self.name)
+            counter = 1
+            while MyBlogSection.objects.filter(slug=self.slug).exists():
+                self.slug = f"{self.slug}-{generate_unique_6_length_character()}-{counter}"
+                counter += 1
 
         super(MyBlogSection, self).save(*args, **kwargs)
     
@@ -857,7 +943,7 @@ class MyBlogSubheading(BaseModelMixin):
             description (TextField): An optional description or details about the subheading.
                                     It can be a longer text field.
             file (FileField): An optional file to be uploaded and associated with the subheading.
-                            Only JPG and JPEG files are allowed.
+                            Only JPG, PNG and JPEG files are allowed.
             my_blog (ForeignKey): A foreign key to link the subheading to the MyBlogSection model.
 
         Methods:
@@ -878,6 +964,7 @@ class MyBlogSubheading(BaseModelMixin):
                                  - #b# text #b#: To make the 'text' bold like #b# text #b#.\n
                                  - #a# url #a#: To create a link with the 'url' like #a#https://www.example.com#a# . \n
                                  - #i# text #i#: To make the 'text' italic like #i# text #i#.\n
+                                 - #h# : To start from a new line.\n.
                                  - #pre# code #pre#: To display code. like  #pre# print("Hello, world!") #pre# \n
                                  - #Gist# url or file #Gist#: To include a Gist.like #Gist# url="https://gist.github.com/user/12345" file="script.py" #Gist#\n
                          To include a Gist, use the #Gist# custom symbol followed by either 'url' or 'file',
@@ -886,7 +973,7 @@ class MyBlogSubheading(BaseModelMixin):
 
                          Note: 'file' is optional when including a Gist.""")
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Please upload an image with a 4:3 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
     my_blog = models.ForeignKey(MyBlogSection, related_name="MyBlog_subheadings",
         on_delete=models.CASCADE, null=True, blank=True)
     
@@ -939,16 +1026,19 @@ class BlogComments(BaseModelMixin):
             The `save` method of the `BaseModelMixin` is inherited to ensure only one object of `BlogComments` is allowed.
     """
     name = models.CharField(max_length=100, null=False, blank=False, help_text="Maximum length is 100 characters.")
-    message = models.TextField(max_length=500, null=False, blank=False, validators=[MaxLengthValidator(500)], 
-                               help_text="Maximum length is 500 characters.")
+    message = models.TextField(max_length=1024, null=False, blank=False, validators=[MaxLengthValidator(1024)], 
+                               help_text="Maximum length is 1024 characters.")
     email = email = models.EmailField(
         null=False,
         blank=False,
         help_text="Enter your email address. like example@gmail.com",
         validators=[EmailValidator(message="Enter a valid email address.")]
     )
-    my_blog = models.ForeignKey(MyBlogSection, related_name="MyBlog_comments",
-        on_delete=models.CASCADE, null=True, blank=True)
+    my_blog = models.ForeignKey(MyBlogSection, 
+                                related_name="MyBlog_comments",
+        on_delete=models.CASCADE, 
+        null=True, blank=True, 
+        to_field='slug')
 
 
 class SocialMediaLinks(BaseModelMixin):
@@ -996,6 +1086,7 @@ class SocialMediaLinks(BaseModelMixin):
     linkedin = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
     github = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
     facebook = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
+    leetcode = models.CharField(max_length=255, null=True, blank=True, help_text="Maximum length is 255 characters.")
 
     objects = SingleObjectManager()
 
@@ -1037,8 +1128,8 @@ class ContactMe(BaseModelMixin):
             )
     """
     name = models.CharField(max_length=255, null=False, blank=False)
-    message = models.CharField(max_length=500, null=False, blank=False, validators=[MaxLengthValidator(500)], 
-                               help_text="Maximum length is 500 characters.")
+    message = models.TextField(max_length=1024, null=False, blank=False, validators=[MaxLengthValidator(1024)], 
+                               help_text="Maximum length is 1024 characters.")
     subject = models.TextField(max_length=100, null=False, blank=False)
     email = email = models.EmailField(
         null=False,
@@ -1089,7 +1180,7 @@ class HireMeSection(BaseModelMixin):
     is_button_available = models.BooleanField(default=False)
     button_text = models.CharField(max_length=25, null=True, blank=True)
     file = models.FileField(upload_to=unique_blog_filename, blank=True, 
-                            help_text="Please upload an image with a 16:9 aspect ratio, and only JPG and JPEG files are allowed.")
+                            help_text="Only JPG, PNG and JPEG files are allowed.")
 
     
     objects = SingleObjectManager()

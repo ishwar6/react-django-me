@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow:
+
+Sitemap: http://157.245.96.5/api/sitemap.xml

@@ -18,18 +18,31 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from web_portal.views import PortfolioView, BlogCommentsCreateView, BlogsGetView, ProjectsGetView,ContactMeCreateView
+from web_portal.views import PortfolioView, BlogCommentsCreateView, BlogsGetView, ProjectsGetView,ContactMeCreateView, FooterView
+from web_portal.sitemaps import BlogSitemap, ProjectsSitemap
 
+from django.contrib.sitemaps.views import sitemap
+
+sitemaps = {
+    'blogs': BlogSitemap,
+    'projects': ProjectsSitemap,
+}
 
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/home', PortfolioView.as_view(), name='home-page'),
+    path('api/footer', FooterView.as_view(), name='footer-header'),
+    path('api/projects/<slug:slug>/', ProjectsGetView.as_view(), name='projects'),
     path('api/projects/', ProjectsGetView.as_view(), name='projects'),
     path('api/contact-me/', ContactMeCreateView.as_view(), name='contact-me'),
     path('api/blogs/', BlogsGetView.as_view(), name='my-blogs'),
-    path('api/blog-comments/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
+    path('api/blogs/<slug:slug>/', BlogsGetView.as_view(), name='my-blogs'),
+    path('api/blog-comments/<slug:slug>/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
+    path('api/blog-comments/<slug:slug>/', BlogCommentsCreateView.as_view(), name='blog-comments-create'),
+    path('api/sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
+
 
 
 

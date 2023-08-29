@@ -31,20 +31,10 @@ SECRET_KEY = 'django-insecure-7ir!74++fu#n(84_48shvz#r5ad4o4uw_mxobd6spi(0xg+b@=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['157.245.96.5', 'localhost','13.235.95.26']
 
-CSRF_TRUSTED_ORIGINS = ['http://157.245.96.5', 'http://127.0.0.1', 'http://localhost','http://localhost:5173','http://portfolio.softcoders.me','http://13.235.95.26']
-
-CORS_ALLOWED_ORIGINS = [
-    'http://157.245.96.5',
-    "http://13.235.95.26",
-    "http://localhost",
-    "http://127.0.0.1",
-    'http://127.0.0.1:5500',
-    'http://localhost:5173',
-    'http://portfolio.softcoders.me',
-    'http://157.245.96.5:5173'
-]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 
 # Application definition
 
@@ -59,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'taggit',
     'corsheaders',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -163,3 +153,40 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+
+LOGGING_DIR = os.path.join(BASE_DIR, 'log')  # Path to the log folder
+if not os.path.exists(LOGGING_DIR):
+    os.makedirs(LOGGING_DIR)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGGING_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
