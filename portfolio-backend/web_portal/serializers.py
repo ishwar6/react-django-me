@@ -336,7 +336,6 @@ class ProjectsSerializer(serializers.ModelSerializer):
         if serializer.is_valid():
             serializer.save()
     """
-    subheadings = ProjectSubheadingSerializer(many=True, read_only=True, source='projects_subheadings')
     class Meta:
         model = Projects
         fields = '__all__'
@@ -344,7 +343,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
     
 
     def to_representation(self, instance):
-        subheadings_queryset = instance.projects_subheadings.all().order_by('-created_at')  
+        subheadings_queryset = instance.projects_subheadings.all() 
         subheadings_serializer = ProjectSubheadingSerializer(subheadings_queryset, many=True)
 
         representation = super().to_representation(instance)
@@ -398,7 +397,6 @@ class MyBlogSectionSerializer(serializers.ModelSerializer):
         slug_field='name', 
         read_only=True
     )
-    subheadings = MyBlogSubheadingSerializer(many=True, read_only=True, source='MyBlog_subheadings')
     
     
     class Meta:
@@ -407,7 +405,7 @@ class MyBlogSectionSerializer(serializers.ModelSerializer):
         ordering = ['-created_at']
     
     def to_representation(self, instance):
-        subheadings_queryset = instance.MyBlog_subheadings.all().order_by('-created_at')  
+        subheadings_queryset = instance.MyBlog_subheadings.all()  
         subheadings_serializer = MyBlogSubheadingSerializer(subheadings_queryset, many=True)
 
         representation = super().to_representation(instance)
